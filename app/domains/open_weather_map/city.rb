@@ -1,3 +1,5 @@
+require 'json'
+
 module OpenWeatherMap
   class City
     attr_reader :id, :lat, :lon, :name
@@ -19,8 +21,9 @@ module OpenWeatherMap
     end
 
     def self.parse(city)
-      OpenWeatherMap::City.new(city['id'], city['coord']['lat'], city['coord']['lon'],
-                               city['main']['temp'], city['name'])
+      city = JSON.parse(city)
+      new(city['id'], city['coord']['lat'], city['coord']['lon'],
+          city['main']['temp'], city['name'])
     end
   end
 end
