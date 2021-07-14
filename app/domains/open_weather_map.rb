@@ -14,4 +14,8 @@ module OpenWeatherMap
                       ).body
     OpenWeatherMap::City.parse(current_weather)
   end
+
+  def self.cities(city_names)
+    city_names.collect { |city_name| city(city_name) }
+  end
 end
