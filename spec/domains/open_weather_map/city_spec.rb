@@ -19,4 +19,14 @@ RSpec.describe OpenWeatherMap::City do
     other_city = described_class.new(3816961, 43.7925, 16.942221, 290, 'Zabrišće')
     expect(city <=> other_city).to eq(1)
   end
+
+  it 'parses correctly' do
+    city = { 'coord' => { 'lat' => 145.77, 'lon' => -16.92 },
+             'main' => { 'temp' => 300.15 }, 'id' => 2172797, 'name' => 'Cairns' }
+    expect(described_class.parse(city).id).to eq(2172797)
+    expect(described_class.parse(city).lat).to eq(145.77)
+    expect(described_class.parse(city).lon).to eq(-16.92)
+    expect(described_class.parse(city).temp).to eq(27.0)
+    expect(described_class.parse(city).name).to eq('Cairns')
+  end
 end
