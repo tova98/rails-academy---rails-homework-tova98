@@ -31,6 +31,7 @@ module OpenWeatherMap
     end
 
     def self.parse(city)
+      city.is_a?(Hash) ? city = city.to_json : city
       city = JSON.parse(city)
       new(id: city['id'], lat: city['coord']['lat'], lon: city['coord']['lon'],
           temp_k: city['main']['temp'], name: city['name'])
@@ -43,8 +44,8 @@ module OpenWeatherMap
       end.first(count)
     end
 
-    def coldest_nearby
-      nearby.map { |city| OpenWeatherMap.city(city['name'], city['id']) }.min
+    def coldest_nearby(count = 5)
+      nearby(count).map { |city| OpenWeatherMap.city(city['name'], city['id']) }.min
     end
   end
 end
