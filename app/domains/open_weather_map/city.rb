@@ -1,5 +1,15 @@
 require 'json'
 
+def distance(lat1, lon1, lat2, lon2)
+  x = deg2rad(lon1 - lon2) * Math.cos(deg2rad((lat1 + lat2)) / 2)
+  y = deg2rad(lat1 - lat2)
+  Math.sqrt(x * x + y * y)
+end
+
+def deg2rad(degrees)
+  degrees * Math::PI / 180
+end
+
 module OpenWeatherMap
   class City
     attr_reader :id, :lat, :lon, :name
@@ -24,6 +34,17 @@ module OpenWeatherMap
       city = JSON.parse(city)
       new(city['id'], city['coord']['lat'], city['coord']['lon'],
           city['main']['temp'], city['name'])
+    end
+
+    def nearby(count = 5)
+      file_string = File.read(File.expand_path('city_ids.json', __dir__))
+      JSON.parse(file_string).sort_by do |city|
+        distance(lat, lon, city['coord']['lat'], city['coord']['lon'])
+      end.first(count)
+    end
+
+    def coldest_nearby
+      nearby.map { |city| OpenWeatherMap.city(city['name'], city['id']) }.min
     end
   end
 end

@@ -23,10 +23,10 @@ RSpec.describe OpenWeatherMap::City do
   it 'parses correctly' do
     city = { 'coord' => { 'lat' => 145.77, 'lon' => -16.92 },
              'main' => { 'temp' => 300.15 }, 'id' => 2172797, 'name' => 'Cairns' }
-    expect(described_class.parse(city).id).to eq(2172797)
-    expect(described_class.parse(city).lat).to eq(145.77)
-    expect(described_class.parse(city).lon).to eq(-16.92)
-    expect(described_class.parse(city).temp).to eq(27.0)
-    expect(described_class.parse(city).name).to eq('Cairns')
+    expect(described_class.parse(city.to_json).id).to eq(2172797)
+    expect(described_class.parse(city.to_json).lat).to eq(145.77)
+    expect(described_class.parse(city.to_json).lon).to eq(-16.92)
+    expect(described_class.parse(city.to_json).temp).to eq(27.0)
+    expect(described_class.parse(city.to_json).name).to eq('Cairns')
   end
 end
