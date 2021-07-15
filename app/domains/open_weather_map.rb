@@ -1,8 +1,8 @@
 require 'faraday'
 
 module OpenWeatherMap
-  def self.city(city_name, city_id = nil)
-    city_id.nil? ? city_id = Resolver.city_id(city_name) : city_id
+  def self.city(city_name)
+    city_id = Resolver.city_id(city_name)
     city_id.nil? ? return : city_id
 
     current_weather = (Faraday.get 'https://api.openweathermap.org/data/2.5/weather',

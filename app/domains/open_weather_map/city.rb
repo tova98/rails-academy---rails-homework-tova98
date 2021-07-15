@@ -1,14 +1,5 @@
 require 'json'
-
-def distance(lat1, lon1, lat2, lon2)
-  x = deg2rad(lon1 - lon2) * Math.cos(deg2rad((lat1 + lat2)) / 2)
-  y = deg2rad(lat1 - lat2)
-  Math.sqrt(x * x + y * y)
-end
-
-def deg2rad(degrees)
-  degrees * Math::PI / 180
-end
+require 'faraday'
 
 module OpenWeatherMap
   class City
@@ -38,14 +29,17 @@ module OpenWeatherMap
     end
 
     def nearby(count = 5)
-      file_string = File.read(File.expand_path('city_ids.json', __dir__))
-      JSON.parse(file_string).sort_by do |city|
-        distance(lat, lon, city['coord']['lat'], city['coord']['lon'])
-      end.first(count)
+      current_weather = (Faraday.get 'https://api.openweathermap.org/data/2.5/find',
+                                     { lat: lat,
+                                       lon: lon,
+                                       cnt: count,
+                                       appid: 'd5573e972de12da9e572b97e1cd2ad98' }
+                        ).body
+      JSON.parse(current_weather)['list'].collect { |city| OpenWeatherMap::City.parse(city) }
     end
 
     def coldest_nearby(count = 5)
-      nearby(count).map { |city| OpenWeatherMap.city(city['name'], city['id']) }.min
+      nearby(count).min
     end
   end
 end
