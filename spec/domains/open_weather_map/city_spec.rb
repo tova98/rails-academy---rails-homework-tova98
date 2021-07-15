@@ -1,3 +1,4 @@
+# rubocop:disable Style/NumericLiterals
 RSpec.describe OpenWeatherMap::City do
   it 'calculates correct temperature in Celsius' do
     city = described_class.new(3186984, 46.029442, 15.915, 300, 'Zabok')
@@ -30,3 +31,4 @@ RSpec.describe OpenWeatherMap::City do
     expect(described_class.parse(city.to_json).name).to eq('Cairns')
   end
 end
+# rubocop:enable Style/NumericLiterals
