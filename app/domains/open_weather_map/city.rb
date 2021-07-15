@@ -14,7 +14,7 @@ module OpenWeatherMap
   class City
     attr_reader :id, :lat, :lon, :name
 
-    def initialize(id, lat, lon, temp_k, name)
+    def initialize(id:, lat:, lon:, temp_k:, name:)
       @id = id
       @lat = lat
       @lon = lon
@@ -32,8 +32,8 @@ module OpenWeatherMap
 
     def self.parse(city)
       city = JSON.parse(city)
-      new(city['id'], city['coord']['lat'], city['coord']['lon'],
-          city['main']['temp'], city['name'])
+      new(id: city['id'], lat: city['coord']['lat'], lon: city['coord']['lon'],
+          temp_k: city['main']['temp'], name: city['name'])
     end
 
     def nearby(count = 5)
