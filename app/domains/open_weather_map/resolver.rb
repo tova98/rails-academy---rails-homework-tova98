@@ -1,12 +1,11 @@
-require 'json'
-
 module OpenWeatherMap
   module Resolver
     def self.city_id(city_name)
-      file_string = File.read(File.expand_path('city_ids.json', __dir__))
-      cities = JSON.parse(file_string)
-      found_city = cities.find { |city| city['name'] == city_name }
-      found_city.to_h['id']
+      cities.find { |city| city['name'] == city_name }.to_h['id']
+    end
+
+    def self.cities
+      @cities ||= JSON.parse(File.read(File.expand_path('city_ids.json', __dir__)))
     end
   end
 end

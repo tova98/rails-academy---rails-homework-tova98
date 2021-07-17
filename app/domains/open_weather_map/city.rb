@@ -1,6 +1,3 @@
-require 'json'
-require 'faraday'
-
 module OpenWeatherMap
   class City
     attr_reader :id, :lat, :lon, :name
@@ -22,24 +19,23 @@ module OpenWeatherMap
     end
 
     def self.parse(city)
-      city.is_a?(Hash) ? city = city.to_json : city
-      city = JSON.parse(city)
       new(id: city['id'], lat: city['coord']['lat'], lon: city['coord']['lon'],
           temp_k: city['main']['temp'], name: city['name'])
     end
 
     def nearby(count = 5)
-      current_weather = (Faraday.get 'https://api.openweathermap.org/data/2.5/find',
+      current_weather = (Faraday.get "#{BASE_URL}/find",
                                      { lat: lat,
                                        lon: lon,
                                        cnt: count,
-                                       appid: 'd5573e972de12da9e572b97e1cd2ad98' }
+                                       appid: Rails.application.credentials.open_weather_map_api_key } # rubocop:disable Layout/LineLength
                         ).body
-      JSON.parse(current_weather)['list'].collect { |city| OpenWeatherMap::City.parse(city) }
+      JSON.parse(current_weather)['list'].map { |city| OpenWeatherMap::City.parse(city) }
     end
 
     def coldest_nearby(count = 5)
-      nearby(count).min
+      args = [count]
+      nearby(*args).min
     end
   end
 end
