@@ -28,13 +28,12 @@ module OpenWeatherMap
                                      { lat: lat,
                                        lon: lon,
                                        cnt: count,
-                                       appid: Rails.application.credentials.open_weather_map_api_key } # rubocop:disable Layout/LineLength
+                                       appid: API_KEY }
                         ).body
       JSON.parse(current_weather)['list'].map { |city| OpenWeatherMap::City.parse(city) }
     end
 
-    def coldest_nearby(count = 5)
-      args = [count]
+    def coldest_nearby(*args)
       nearby(*args).min
     end
   end

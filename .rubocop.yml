@@ -26,9 +26,6 @@ RSpec/MultipleExpectations:
 Style/MutableConstant:
   Enabled: false
 
-Style/NumericLiterals:
-  Enabled: false
-
 Metrics/BlockLength:
   Exclude:
     - 'config/routes.rb'

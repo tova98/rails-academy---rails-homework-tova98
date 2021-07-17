@@ -1,12 +1,13 @@
 module OpenWeatherMap
   BASE_URL = 'https://api.openweathermap.org/data/2.5'
+  API_KEY = Rails.application.credentials.open_weather_map_api_key
   def self.city(city_name)
     city_id = Resolver.city_id(city_name)
     return nil if city_id.nil?
 
     current_weather = (Faraday.get "#{BASE_URL}/weather",
                                    { id: city_id,
-                                     appid: Rails.application.credentials.open_weather_map_api_key }
+                                     appid: API_KEY }
                       ).body
     City.parse(JSON.parse(current_weather))
   end
