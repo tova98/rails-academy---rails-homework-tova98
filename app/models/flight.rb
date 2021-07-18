@@ -27,13 +27,14 @@ class Flight < ApplicationRecord
   validates :base_price, presence: true, numericality: { greater_than: 0 }
 
   def departs_before_arrives
-    return unless departs_at.present? && arrives_at.present? && departs_at >= arrives_at
+    return unless departs_at.present? && arrives_at.present?
+    return if departs_at.before? arrives_at
 
     errors.add(:departs_at, 'must depart before it arrives')
   end
 
   def departs_in_past
-    return unless departs_at.present? && departs_at < DateTime.current
+    return unless departs_at.present? && (departs_at.before? DateTime.current)
 
     errors.add(:departs_at, 'must not be in past')
   end
