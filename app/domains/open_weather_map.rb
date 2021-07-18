@@ -18,7 +18,7 @@ module OpenWeatherMap
 
     multi_city_weather = (Faraday.get "#{BASE_URL}/group",
                                       { id: city_ids,
-                                        appid: Rails.application.credentials.open_weather_map_api_key } # rubocop:disable Layout/LineLength
+                                        appid: API_KEY }
                          ).body
     JSON.parse(multi_city_weather)['list'].map { |city| City.parse(city) }
   end
