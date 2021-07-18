@@ -19,6 +19,7 @@ class Flight < ApplicationRecord
   has_many :users, through: :bookings
 
   validates :name, presence: true, uniqueness: { case_sensitive: false, scope: :company_id }
+  validates :no_of_seats, presence: true, numericality: { greater_than: 0 }
   validates :departs_at, presence: true
   validates :arrives_at, presence: true
   validate :departs_before_arrives

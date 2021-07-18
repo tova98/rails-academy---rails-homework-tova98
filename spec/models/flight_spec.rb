@@ -9,12 +9,25 @@ RSpec.describe Flight do
     company = Company.create!(name: 'Air1')
     other_company = Company.create!(name: 'Air2')
 
-    described_class.create!(name: 'flight', departs_at: DateTime.current + 1,
+    described_class.create!(name: 'flight', no_of_seats: 50,
+                            departs_at: DateTime.current + 1,
                             arrives_at: DateTime.current + 2, base_price: 100,
                             company_id: company.id)
     flight = described_class.new(name: 'FLIGHT', company_id: other_company.id)
     flight.valid?
     expect(flight.errors[:name]).not_to include('has already been taken')
+  end
+
+  it 'is invalid without a no_of_seats' do
+    flight = described_class.new(no_of_seats: nil)
+    flight.valid?
+    expect(flight.errors[:no_of_seats]).to include("can't be blank")
+  end
+
+  it 'is invalid when no_of_seats is less than 0' do
+    flight = described_class.new(no_of_seats: -2)
+    flight.valid?
+    expect(flight.errors[:no_of_seats]).to include('must be greater than 0')
   end
 
   it 'is invalid without a departs_at' do
