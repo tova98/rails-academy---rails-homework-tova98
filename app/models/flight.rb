@@ -34,7 +34,7 @@ class Flight < ApplicationRecord
   end
 
   def departs_in_past
-    return unless departs_at.present? && (departs_at.before? DateTime.current)
+    return unless departs_at.present? && departs_at.before?(DateTime.current)
 
     errors.add(:departs_at, 'must not be in past')
   end
