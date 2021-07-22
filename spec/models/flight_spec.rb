@@ -47,10 +47,4 @@ RSpec.describe Flight do
     flight.valid?
     expect(flight.errors[:departs_at]).to include('must depart before it arrives')
   end
-
-  it 'is invalid when departs_at is in past' do
-    flight = described_class.new(departs_at: DateTime.current - 1)
-    flight.valid?
-    expect(flight.errors[:departs_at]).to include('must not be in past')
-  end
 end

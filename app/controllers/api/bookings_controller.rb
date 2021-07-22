@@ -5,19 +5,20 @@ module Api
     def index
       @bookings = Booking.all
 
-      render json: BookingSerializer.render(@bookings, root: :bookings)
+      render json: BookingSerializer.render(@bookings, view: :normal, root: :bookings)
     end
 
     def show
       @booking = Booking.find(params[:id])
-      render json: BookingSerializer.render(@booking, root: :booking)
+      render json: BookingSerializer.render(@booking, view: :normal, root: :booking)
     end
 
     def create
       @booking = Booking.new(booking_params)
 
       if @booking.save
-        render json: BookingSerializer.render(@booking, root: :booking), status: :created
+        render json: BookingSerializer.render(@booking, view: :normal, root: :booking),
+               status: :created
       else
         render json: { errors: @booking.errors.as_json }, status: :bad_request
       end
@@ -27,7 +28,7 @@ module Api
       @booking = Booking.find(params[:id])
 
       if @booking.update(booking_params)
-        render json: BookingSerializer.render(@booking, root: :booking)
+        render json: BookingSerializer.render(@booking, view: :normal, root: :booking)
       else
         render json: { errors: @booking.errors.as_json }, status: :bad_request
       end
@@ -35,7 +36,6 @@ module Api
 
     def destroy
       @booking = Booking.find(params[:id])
-      render json: { errors: @booking.errors.as_json } if @booking.nil?
 
       if @booking.destroy
         render json: { messages: ['Booking has been deleted.'] }, status: :no_content

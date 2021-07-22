@@ -5,19 +5,20 @@ module Api
     def index
       @flights = Flight.all
 
-      render json: FlightSerializer.render(@flights, root: :flights)
+      render json: FlightSerializer.render(@flights, view: :normal, root: :flights)
     end
 
     def show
       @flight = Flight.find(params[:id])
-      render json: FlightSerializer.render(@flight, root: :flight)
+      render json: FlightSerializer.render(@flight, view: :normal, root: :flight)
     end
 
     def create
       @flight = Flight.new(flight_params)
 
       if @flight.save
-        render json: FlightSerializer.render(@flight, root: :flight), status: :created
+        render json: FlightSerializer.render(@flight, view: :normal, root: :flight),
+               status: :created
       else
         render json: { errors: @flight.errors.as_json }, status: :bad_request
       end
@@ -27,7 +28,7 @@ module Api
       @flight = Flight.find(params[:id])
 
       if @flight.update(flight_params)
-        render json: FlightSerializer.render(@flight, root: :flight)
+        render json: FlightSerializer.render(@flight, view: :normal, root: :flight)
       else
         render json: { errors: @flight.errors.as_json }, status: :bad_request
       end
