@@ -1,3 +1,13 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :users, only: [:index, :show, :create, :update, :destroy]
+  resources :companies, only: [:index, :show, :create, :update, :destroy]
+  resources :flights, only: [:index, :show, :create, :update, :destroy]
+  resources :bookings, only: [:index, :show, :create, :update, :destroy]
+
+  namespace :api do
+    resources :users, only: [:index, :show, :create, :update, :destroy]
+    resources :companies, only: [:index, :show, :create, :update, :destroy]
+    resources :flights, only: [:index, :show, :create, :update, :destroy]
+    resources :bookings, only: [:index, :show, :create, :update, :destroy]
+  end
 end

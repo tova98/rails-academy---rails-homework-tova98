@@ -25,10 +25,12 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+gem 'blueprinter'
 gem 'faraday'
 gem 'pg'
 
 group :development, :test do
+  gem 'factory_bot_rails'
   gem 'overcommit', require: false
   gem 'pry-rails'
   gem 'rspec-rails'
