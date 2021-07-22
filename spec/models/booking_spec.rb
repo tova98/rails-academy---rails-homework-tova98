@@ -28,6 +28,6 @@ RSpec.describe Booking do
   it 'is invalid when departs_at is in past' do
     booking.flight.departs_at = DateTime.current - 1
     booking.valid?
-    expect(booking.errors[:departs_at]).to include('must not be in past')
+    expect(booking.errors[:flight]).to include('must not be in past')
   end
 end
