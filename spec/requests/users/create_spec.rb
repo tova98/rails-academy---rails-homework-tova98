@@ -24,7 +24,7 @@ RSpec.describe 'Users', type: :request do
              headers: api_headers
 
         expect(response).to have_http_status(:bad_request)
-        expect(json_body['errors']).to include("First name can't be blank")
+        expect(json_body['errors']['first_name']).to include("can't be blank")
       end
     end
   end

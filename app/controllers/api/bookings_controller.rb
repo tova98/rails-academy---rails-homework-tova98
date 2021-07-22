@@ -19,7 +19,7 @@ module Api
       if @booking.save
         render json: BookingSerializer.render(@booking, root: :booking), status: :created
       else
-        render json: { errors: @booking.errors.full_messages }, status: :bad_request
+        render json: { errors: @booking.errors.as_json }, status: :bad_request
       end
     end
 
@@ -29,18 +29,18 @@ module Api
       if @booking.update(booking_params)
         render json: BookingSerializer.render(@booking, root: :booking)
       else
-        render json: { errors: @booking.errors.full_messages }, status: :bad_request
+        render json: { errors: @booking.errors.as_json }, status: :bad_request
       end
     end
 
     def destroy
       @booking = Booking.find(params[:id])
-      render json: { errors: @booking.errors.full_messages } if @booking.nil?
+      render json: { errors: @booking.errors.as_json } if @booking.nil?
 
       if @booking.destroy
-        render json: { messages: ['Booking has been deleted.'] }
+        render json: { messages: ['Booking has been deleted.'] }, status: :no_content
       else
-        render json: { errors: @booking.errors.full_messages }
+        render json: { errors: @booking.errors.as_json }, status: :bad_request
       end
     end
 

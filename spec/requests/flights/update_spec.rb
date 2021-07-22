@@ -25,7 +25,7 @@ RSpec.describe 'Flights', type: :request do
               headers: api_headers
 
         expect(response).to have_http_status(:bad_request)
-        expect(json_body['errors']).to include("Name can't be blank")
+        expect(json_body['errors']['name']).to include("can't be blank")
       end
     end
   end

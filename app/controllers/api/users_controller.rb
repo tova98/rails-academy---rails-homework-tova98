@@ -19,7 +19,7 @@ module Api
       if @user.save
         render json: UserSerializer.render(@user, root: :user), status: :created
       else
-        render json: { errors: @user.errors.full_messages }, status: :bad_request
+        render json: { errors: @user.errors.as_json }, status: :bad_request
       end
     end
 
@@ -29,7 +29,7 @@ module Api
       if @user.update(user_params)
         render json: UserSerializer.render(@user, root: :user)
       else
-        render json: { errors: @user.errors.full_messages }, status: :bad_request
+        render json: { errors: @user.errors.as_json }, status: :bad_request
       end
     end
 
@@ -37,9 +37,9 @@ module Api
       @user = User.find(params[:id])
 
       if @user.destroy
-        render json: { messages: ['User has been deleted.'] }
+        render json: { messages: ['User has been deleted.'] }, status: :no_content
       else
-        render json: { errors: @user.errors.full_messages }
+        render json: { errors: @user.errors.as_json }, status: :bad_request
       end
     end
 

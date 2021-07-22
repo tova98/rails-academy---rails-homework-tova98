@@ -19,7 +19,7 @@ module Api
       if @flight.save
         render json: FlightSerializer.render(@flight, root: :flight), status: :created
       else
-        render json: { errors: @flight.errors.full_messages }, status: :bad_request
+        render json: { errors: @flight.errors.as_json }, status: :bad_request
       end
     end
 
@@ -29,7 +29,7 @@ module Api
       if @flight.update(flight_params)
         render json: FlightSerializer.render(@flight, root: :flight)
       else
-        render json: { errors: @flight.errors.full_messages }, status: :bad_request
+        render json: { errors: @flight.errors.as_json }, status: :bad_request
       end
     end
 
@@ -37,9 +37,9 @@ module Api
       @flight = Flight.find(params[:id])
 
       if @flight.destroy
-        render json: FlightSerializer.render(@flight, root: :flight)
+        render json: { messages: ['Flight has been deleted.'] }, status: :no_content
       else
-        render json: { errors: @flight.errors.full_messages }
+        render json: { errors: @flight.errors.as_json }, status: :bad_request
       end
     end
 

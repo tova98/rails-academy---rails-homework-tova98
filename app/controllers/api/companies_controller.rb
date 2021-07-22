@@ -19,7 +19,7 @@ module Api
       if @company.save
         render json: CompanySerializer.render(@company, root: :company), status: :created
       else
-        render json: { errors: @company.errors.full_messages }, status: :bad_request
+        render json: { errors: @company.errors.as_json }, status: :bad_request
       end
     end
 
@@ -29,7 +29,7 @@ module Api
       if @company.update(company_params)
         render json: CompanySerializer.render(@company, root: :company)
       else
-        render json: { errors: @company.errors.full_messages }, status: :bad_request
+        render json: { errors: @company.errors.as_json }, status: :bad_request
       end
     end
 
@@ -37,9 +37,9 @@ module Api
       @company = Company.find(params[:id])
 
       if @company.destroy
-        render json: { messages: ['Company has been deleted.'] }
+        render json: { messages: ['Company has been deleted.'] }, status: :no_content
       else
-        render json: { errors: @company.errors.full_messages }
+        render json: { errors: @company.errors.as_json }, status: :bad_request
       end
     end
 
