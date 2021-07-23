@@ -27,6 +27,7 @@ gem 'jbuilder', '~> 2.7'
 
 gem 'blueprinter'
 gem 'faraday'
+gem 'jsonapi-serializer'
 gem 'pg'
 
 group :development, :test do

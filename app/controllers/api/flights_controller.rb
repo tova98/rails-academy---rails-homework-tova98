@@ -5,12 +5,13 @@ module Api
     def index
       @flights = Flight.all
 
-      render json: FlightSerializer.render(@flights, view: :normal, root: :flights)
+      render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show
       @flight = Flight.find(params[:id])
-      render json: FlightSerializer.render(@flight, view: :normal, root: :flight)
+
+      render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
     def create
@@ -53,6 +54,23 @@ module Api
 
     def rescue_from_not_found
       render json: { errors: ['Flight not found.'] }
+    end
+
+    def render_with_serializer(serializer)
+      if serializer.blank? || serializer == 'blueprinter'
+        render json: FlightSerializer.render(@flight, view: :normal, root: :flight)
+      elsif serializer == 'JSON:API'
+        render json: { flight: JsonApi::FlightSerializer.new(@flight)
+                                                        .serializable_hash[:data][:attributes] }
+      end
+    end
+
+    def render_with_root(root)
+      if root.blank? || root == '1'
+        render json: FlightSerializer.render(@flights, root: :flights)
+      elsif root == '0'
+        render json: FlightSerializer.render(@flights)
+      end
     end
   end
 end

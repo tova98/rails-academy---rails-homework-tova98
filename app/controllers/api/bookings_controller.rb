@@ -5,12 +5,13 @@ module Api
     def index
       @bookings = Booking.all
 
-      render json: BookingSerializer.render(@bookings, view: :normal, root: :bookings)
+      render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show
       @booking = Booking.find(params[:id])
-      render json: BookingSerializer.render(@booking, view: :normal, root: :booking)
+
+      render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
     def create
@@ -52,6 +53,23 @@ module Api
 
     def rescue_from_not_found
       render json: { errors: ['Booking not found.'] }
+    end
+
+    def render_with_serializer(serializer)
+      if serializer.blank? || serializer == 'blueprinter'
+        render json: BookingSerializer.render(@booking, view: :normal, root: :booking)
+      elsif serializer == 'JSON:API'
+        render json: { booking: JsonApi::BookingSerializer.new(@booking)
+                                                          .serializable_hash[:data][:attributes] }
+      end
+    end
+
+    def render_with_root(root)
+      if root.blank? || root == '1'
+        render json: BookingSerializer.render(@bookings, root: :bookings)
+      elsif root == '0'
+        render json: BookingSerializer.render(@bookings)
+      end
     end
   end
 end

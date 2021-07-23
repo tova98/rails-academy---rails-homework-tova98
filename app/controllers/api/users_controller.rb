@@ -5,12 +5,12 @@ module Api
     def index
       @users = User.all
 
-      render json: UserSerializer.render(@users, root: :users)
+      render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show
       @user = User.find(params[:id])
-      render json: UserSerializer.render(@user, root: :user)
+      render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
     def create
@@ -25,7 +25,6 @@ module Api
 
     def update
       @user = User.find(params[:id])
-
       if @user.update(user_params)
         render json: UserSerializer.render(@user, root: :user)
       else
@@ -51,6 +50,23 @@ module Api
 
     def rescue_from_not_found
       render json: { errors: ['User not found.'] }
+    end
+
+    def render_with_serializer(serializer)
+      if serializer.blank? || serializer == 'blueprinter'
+        render json: UserSerializer.render(@user, root: :user)
+      elsif serializer == 'JSON:API'
+        render json: { user: JsonApi::UserSerializer.new(@user)
+                                                    .serializable_hash[:data][:attributes] }
+      end
+    end
+
+    def render_with_root(root)
+      if root.blank? || root == '1'
+        render json: UserSerializer.render(@users, root: :users)
+      elsif root == '0'
+        render json: UserSerializer.render(@users)
+      end
     end
   end
 end
