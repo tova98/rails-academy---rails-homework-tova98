@@ -1,10 +1,8 @@
 RSpec.describe 'Flights', type: :request do
-  include TestHelpers::JsonResponse
-
   describe 'PATCH /api/flights/:id' do
     context 'when params are valid' do
       it 'updates flight' do
-        flight = FactoryBot.create(:flight)
+        flight = create(:flight)
 
         patch "/api/flights/#{flight.id}",
               params: { flight: { name: 'AirUpdated' } }.to_json,
@@ -18,7 +16,7 @@ RSpec.describe 'Flights', type: :request do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        flight = FactoryBot.create(:flight)
+        flight = create(:flight)
 
         patch "/api/flights/#{flight.id}",
               params: { flight: { name: '' } }.to_json,

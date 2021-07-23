@@ -1,5 +1,5 @@
 RSpec.describe Booking do
-  let(:booking) { FactoryBot.create(:booking) }
+  let(:booking) { create(:booking) }
 
   it 'is invalid without seat price' do
     booking.seat_price = nil

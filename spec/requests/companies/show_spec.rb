@@ -1,6 +1,5 @@
 RSpec.describe 'Companies', type: :request do
-  include TestHelpers::JsonResponse
-  let(:company) { FactoryBot.create(:company) }
+  let(:company) { create(:company) }
 
   describe 'GET /api/companies/:id' do
     it 'returns a single company, no header' do
@@ -14,7 +13,7 @@ RSpec.describe 'Companies', type: :request do
       get "/api/companies/#{company.id}", headers: { 'X_API_SERIALIZER': 'JSON:API' }
 
       expect(response).to have_http_status(:ok)
-      expect(json_body['company']).to include('name' => company.name)
+      expect(json_body['data']['attributes']).to include('name' => company.name)
     end
 
     it 'returns a single company, with blueprinter header parameter' do

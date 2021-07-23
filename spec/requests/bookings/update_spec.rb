@@ -1,10 +1,8 @@
 RSpec.describe 'Bookings', type: :request do
-  include TestHelpers::JsonResponse
-
   describe 'PATCH /api/bookings/:id' do
     context 'when params are valid' do
       it 'updates booking' do
-        booking = FactoryBot.create(:booking)
+        booking = create(:booking)
 
         patch "/api/bookings/#{booking.id}",
               params: { booking: { seat_price: 450 } }.to_json,
@@ -18,7 +16,7 @@ RSpec.describe 'Bookings', type: :request do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        booking = FactoryBot.create(:booking)
+        booking = create(:booking)
 
         patch "/api/bookings/#{booking.id}",
               params: { booking: { seat_price: '' } }.to_json,

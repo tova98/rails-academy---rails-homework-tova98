@@ -1,8 +1,6 @@
 RSpec.describe 'Users', type: :request do
-  include TestHelpers::JsonResponse
-
   before do
-    FactoryBot.create_list(:user, 3)
+    create_list(:user, 3)
   end
 
   it 'returns users, no headers' do

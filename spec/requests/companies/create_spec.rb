@@ -1,17 +1,16 @@
 RSpec.describe 'Companies', type: :request do
-  include TestHelpers::JsonResponse
-
   describe 'POST /api/companies' do
     context 'when params are valid' do
       it 'creates company' do
         company_count = Company.count
+        company_attributes = attributes_for(:company).stringify_keys
 
         post '/api/companies',
-             params: { company: { name: 'Air Net' } }.to_json,
+             params: company_attributes.to_json,
              headers: api_headers
 
         expect(response).to have_http_status(:created)
-        expect(json_body['company']).to include('name' => 'Air Net')
+        expect(json_body['company']).to include(company_attributes)
         expect(Company.count).to eq(company_count + 1)
       end
     end

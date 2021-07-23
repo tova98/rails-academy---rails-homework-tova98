@@ -1,10 +1,8 @@
 RSpec.describe 'Users', type: :request do
-  include TestHelpers::JsonResponse
-
   describe 'PATCH /api/users/:id' do
     context 'when params are valid' do
       it 'updates user' do
-        user = FactoryBot.create(:user)
+        user = create(:user)
 
         patch "/api/users/#{user.id}",
               params: { user: { first_name: 'Ivo' } }.to_json,
@@ -18,7 +16,7 @@ RSpec.describe 'Users', type: :request do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        user = FactoryBot.create(:user)
+        user = create(:user)
 
         patch "/api/users/#{user.id}",
               params: { user: { first_name: '' } }.to_json,

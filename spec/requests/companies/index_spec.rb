@@ -1,8 +1,6 @@
 RSpec.describe 'Companies', type: :request do
-  include TestHelpers::JsonResponse
-
   before do
-    FactoryBot.create_list(:company, 3)
+    create_list(:company, 3)
   end
 
   it 'returns companies' do

@@ -1,7 +1,6 @@
 RSpec.describe 'Bookings', type: :request do
-  include TestHelpers::JsonResponse
   before do
-    FactoryBot.create_list(:booking, 3)
+    create_list(:booking, 3)
   end
 
   it 'returns bookings, no header' do

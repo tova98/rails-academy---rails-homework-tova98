@@ -6,11 +6,9 @@ class FlightSerializer < Blueprinter::Base
          :base_price,
          :departs_at,
          :arrives_at,
+         :company_id,
          :created_at,
          :updated_at
 
-  view :normal do
-    fields :company_id
-    association :company, blueprint: CompanySerializer
-  end
+  association :company, blueprint: CompanySerializer
 end

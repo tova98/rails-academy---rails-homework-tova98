@@ -1,6 +1,5 @@
 RSpec.describe 'Flights', type: :request do
-  include TestHelpers::JsonResponse
-  let(:flight) { FactoryBot.create(:flight) }
+  let(:flight) { create(:flight) }
 
   describe 'GET /api/flights/:id' do
     before do
@@ -27,12 +26,12 @@ RSpec.describe 'Flights', type: :request do
       get "/api/flights/#{flight.id}", headers: { 'X_API_SERIALIZER': 'JSON:API' }
 
       expect(response).to have_http_status(:ok)
-      expect(json_body['flight']).to include('name' => flight.name,
-                                             'base_price' => flight.base_price,
-                                             'no_of_seats' => flight.no_of_seats,
-                                             'departs_at' => flight.departs_at,
-                                             'arrives_at' => flight.arrives_at,
-                                             'company_id' => flight.company_id)
+      expect(json_body['data']['attributes']).to include('name' => flight.name,
+                                                         'base_price' => flight.base_price,
+                                                         'no_of_seats' => flight.no_of_seats,
+                                                         'departs_at' => flight.departs_at,
+                                                         'arrives_at' => flight.arrives_at,
+                                                         'company_id' => flight.company_id)
     end
 
     it 'returns a single flight, with blueprinter header parameter' do

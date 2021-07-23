@@ -1,10 +1,8 @@
 RSpec.describe 'Companies', type: :request do
-  include TestHelpers::JsonResponse
-
   describe 'PATCH /api/companies/:id' do
     context 'when params are valid' do
       it 'updates company' do
-        company = FactoryBot.create(:company)
+        company = create(:company)
 
         patch "/api/companies/#{company.id}",
               params: { company: { name: 'New Air' } }.to_json,
@@ -18,7 +16,7 @@ RSpec.describe 'Companies', type: :request do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
-        company = FactoryBot.create(:company)
+        company = create(:company)
 
         patch "/api/companies/#{company.id}",
               params: { company: { name: '' } }.to_json,

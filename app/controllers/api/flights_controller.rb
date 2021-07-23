@@ -1,7 +1,5 @@
 module Api
   class FlightsController < ApplicationController
-    rescue_from ActiveRecord::RecordNotFound, with: :rescue_from_not_found
-
     def index
       @flights = Flight.all
 
@@ -18,7 +16,7 @@ module Api
       @flight = Flight.new(flight_params)
 
       if @flight.save
-        render json: FlightSerializer.render(@flight, view: :normal, root: :flight),
+        render json: FlightSerializer.render(@flight, root: :flight),
                status: :created
       else
         render json: { errors: @flight.errors.as_json }, status: :bad_request
@@ -29,7 +27,7 @@ module Api
       @flight = Flight.find(params[:id])
 
       if @flight.update(flight_params)
-        render json: FlightSerializer.render(@flight, view: :normal, root: :flight)
+        render json: FlightSerializer.render(@flight, root: :flight)
       else
         render json: { errors: @flight.errors.as_json }, status: :bad_request
       end
@@ -50,27 +48,6 @@ module Api
     def flight_params
       params.require(:flight).permit(:name, :no_of_seats, :base_price,
                                      :departs_at, :arrives_at, :company_id)
-    end
-
-    def rescue_from_not_found
-      render json: { errors: ['Flight not found.'] }
-    end
-
-    def render_with_serializer(serializer)
-      if serializer.blank? || serializer == 'blueprinter'
-        render json: FlightSerializer.render(@flight, view: :normal, root: :flight)
-      elsif serializer == 'JSON:API'
-        render json: { flight: JsonApi::FlightSerializer.new(@flight)
-                                                        .serializable_hash[:data][:attributes] }
-      end
-    end
-
-    def render_with_root(root)
-      if root.blank? || root == '1'
-        render json: FlightSerializer.render(@flights, view: :normal, root: :flights)
-      elsif root == '0'
-        render json: FlightSerializer.render(@flights, view: :normal)
-      end
     end
   end
 end

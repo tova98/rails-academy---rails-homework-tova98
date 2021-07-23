@@ -1,8 +1,6 @@
 RSpec.describe 'Flights', type: :request do
-  include TestHelpers::JsonResponse
-
   before do
-    FactoryBot.create_list(:flight, 3)
+    create_list(:flight, 3)
   end
 
   it 'returns flights, no headers' do

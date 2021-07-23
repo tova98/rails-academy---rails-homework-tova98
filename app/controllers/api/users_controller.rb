@@ -1,7 +1,5 @@
 module Api
   class UsersController < ApplicationController
-    rescue_from ActiveRecord::RecordNotFound, with: :rescue_from_not_found
-
     def index
       @users = User.all
 
@@ -46,27 +44,6 @@ module Api
 
     def user_params
       params.require(:user).permit(:first_name, :last_name, :email)
-    end
-
-    def rescue_from_not_found
-      render json: { errors: ['User not found.'] }
-    end
-
-    def render_with_serializer(serializer)
-      if serializer.blank? || serializer == 'blueprinter'
-        render json: UserSerializer.render(@user, root: :user)
-      elsif serializer == 'JSON:API'
-        render json: { user: JsonApi::UserSerializer.new(@user)
-                                                    .serializable_hash[:data][:attributes] }
-      end
-    end
-
-    def render_with_root(root)
-      if root.blank? || root == '1'
-        render json: UserSerializer.render(@users, root: :users)
-      elsif root == '0'
-        render json: UserSerializer.render(@users)
-      end
     end
   end
 end
