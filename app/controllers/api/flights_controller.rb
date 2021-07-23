@@ -67,9 +67,9 @@ module Api
 
     def render_with_root(root)
       if root.blank? || root == '1'
-        render json: FlightSerializer.render(@flights, root: :flights)
+        render json: FlightSerializer.render(@flights, view: :normal, root: :flights)
       elsif root == '0'
-        render json: FlightSerializer.render(@flights)
+        render json: FlightSerializer.render(@flights, view: :normal)
       end
     end
   end

@@ -66,9 +66,9 @@ module Api
 
     def render_with_root(root)
       if root.blank? || root == '1'
-        render json: BookingSerializer.render(@bookings, root: :bookings)
+        render json: BookingSerializer.render(@bookings, view: :normal, root: :bookings)
       elsif root == '0'
-        render json: BookingSerializer.render(@bookings)
+        render json: BookingSerializer.render(@bookings, view: :normal)
       end
     end
   end
