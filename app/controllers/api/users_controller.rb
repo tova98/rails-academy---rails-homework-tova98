@@ -8,6 +8,7 @@ module Api
 
     def show
       @user = User.find(params[:id])
+
       render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
