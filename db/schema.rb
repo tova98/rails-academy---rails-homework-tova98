@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2021_07_16_164849) do
 
   create_table "bookings", force: :cascade do |t|
     t.integer "no_of_seats", null: false
-    t.float "seat_price", null: false
+    t.integer "seat_price", null: false
     t.bigint "user_id"
     t.bigint "flight_id"
     t.datetime "created_at", precision: 6, null: false
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 2021_07_16_164849) do
   create_table "flights", force: :cascade do |t|
     t.string "name", null: false
     t.integer "no_of_seats"
-    t.float "base_price", null: false
+    t.integer "base_price", null: false
     t.datetime "departs_at", null: false
     t.datetime "arrives_at", null: false
     t.bigint "company_id"
