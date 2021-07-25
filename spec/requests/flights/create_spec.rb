@@ -1,4 +1,6 @@
 RSpec.describe 'Flights', type: :request do
+  let(:user) { create(:user) }
+
   describe 'POST /api/flights' do
     context 'when params are valid' do
       it 'creates a flight' do # rubocop:disable RSpec/ExampleLength
@@ -13,7 +15,7 @@ RSpec.describe 'Flights', type: :request do
         expect do
           post '/api/flights',
                params: flight_attributes.to_json,
-               headers: api_headers
+               headers: api_headers.merge({ 'Authorization' => user.token })
         end.to change(Flight, :count).by(1)
 
         expect(response).to have_http_status(:created)
@@ -25,7 +27,7 @@ RSpec.describe 'Flights', type: :request do
       it 'returns 400 Bad Request' do
         post '/api/flights',
              params: { flight: { name: '' } }.to_json,
-             headers: api_headers
+             headers: api_headers.merge({ 'Authorization' => user.token })
 
         expect(response).to have_http_status(:bad_request)
         expect(json_body['errors']['name']).to include("can't be blank")

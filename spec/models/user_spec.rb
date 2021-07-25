@@ -18,7 +18,7 @@ RSpec.describe User do
   end
 
   it 'is invalid when email is already taken (case insensitive)' do
-    described_class.create!(first_name: 'User', email: 'user@email.com')
+    described_class.create!(first_name: 'User', email: 'user@email.com', password: 'password')
     user = described_class.new(email: 'User@email.com')
     user.valid?
     expect(user.errors[:email]).to include('has already been taken')

@@ -1,5 +1,7 @@
 module Api
   class CompaniesController < ApplicationController
+    skip_before_action :authenticate
+
     def index
       @companies = Company.all
 
@@ -14,6 +16,7 @@ module Api
 
     def create
       @company = Company.new(company_params)
+      authorize @company
 
       if @company.save
         render json: CompanySerializer.render(@company, root: :company), status: :created
@@ -24,6 +27,7 @@ module Api
 
     def update
       @company = Company.find(params[:id])
+      authorize @company
 
       if @company.update(company_params)
         render json: CompanySerializer.render(@company, root: :company)
@@ -34,6 +38,7 @@ module Api
 
     def destroy
       @company = Company.find(params[:id])
+      authorize @company
 
       if @company.destroy
         render json: { messages: ['Company has been deleted.'] }, status: :no_content

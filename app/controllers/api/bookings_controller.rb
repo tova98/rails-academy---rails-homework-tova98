@@ -2,34 +2,44 @@ module Api
   class BookingsController < ApplicationController
     def index
       @bookings = Booking.all
+      # authorize @bookings
+
+      @bookings = Booking.all.where(user_id: current_user.id) if current_user.role != 'admin'
 
       render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show
       @booking = Booking.find(params[:id])
-
-      render_with_serializer(request.headers['X_API_SERIALIZER'])
+      token = request.headers['Authorization']
+      if User.find_by(token: token).id != @booking.user_id
+        render json: { errors: { token: ['is invalid'] } }, status: :unauthorized
+      else
+        render_with_serializer(request.headers['X_API_SERIALIZER'])
+      end
     end
 
     def create
+      token = request.headers['Authorization']
+      params['booking']['user_id'] = User.find_by(token: token).id
       @booking = Booking.new(booking_params)
-
       if @booking.save
-        render json: BookingSerializer.render(@booking, root: :booking),
-               status: :created
+        render json: BookingSerializer.render(@booking, root: :booking), status: :created
       else
         render json: { errors: @booking.errors.as_json }, status: :bad_request
       end
     end
 
-    def update
-      @booking = Booking.find(params[:id])
-
-      if @booking.update(booking_params)
-        render json: BookingSerializer.render(@booking, root: :booking)
+    def update # rubocop:disable Metrics/AbcSize
+      if params[:booking][:user_id] && current_user.role != 'admin'
+        render json: { error: 'Authorization denied' }, status: :unauthorized
       else
-        render json: { errors: @booking.errors.as_json }, status: :bad_request
+        @booking = Booking.find(params[:id])
+        if @booking.update(booking_params)
+          render json: BookingSerializer.render(@booking, root: :booking)
+        else
+          render json: { errors: @booking.errors.as_json }, status: :bad_request
+        end
       end
     end
 

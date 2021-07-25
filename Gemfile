@@ -25,10 +25,12 @@ gem 'jbuilder', '~> 2.7'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
+gem 'bcrypt', '~> 3.1.7'
 gem 'blueprinter'
 gem 'faraday'
 gem 'jsonapi-serializer'
 gem 'pg'
+gem 'pundit'
 
 group :development, :test do
   gem 'factory_bot_rails'

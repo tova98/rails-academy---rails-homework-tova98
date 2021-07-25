@@ -6,7 +6,7 @@ RSpec.describe 'Bookings', type: :request do
 
         patch "/api/bookings/#{booking.id}",
               params: { booking: { seat_price: 450 } }.to_json,
-              headers: api_headers
+              headers: api_headers.merge({ 'Authorization' => booking.user.token })
 
         expect(response).to have_http_status(:ok)
         expect(json_body['booking']).to include('seat_price' => 450)
@@ -20,7 +20,7 @@ RSpec.describe 'Bookings', type: :request do
 
         patch "/api/bookings/#{booking.id}",
               params: { booking: { seat_price: '' } }.to_json,
-              headers: api_headers
+              headers: api_headers.merge({ 'Authorization' => booking.user.token })
 
         expect(response).to have_http_status(:bad_request)
         expect(json_body['errors']['seat_price']).to include("can't be blank")

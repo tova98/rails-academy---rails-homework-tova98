@@ -10,7 +10,7 @@ RSpec.describe 'Bookings', type: :request do
         expect do
           post '/api/bookings',
                params: booking_attributes.to_json,
-               headers: api_headers
+               headers: api_headers.merge({ 'Authorization' => user.token })
         end.to change(Booking, :count).by(1)
 
         expect(response).to have_http_status(:created)
@@ -20,9 +20,11 @@ RSpec.describe 'Bookings', type: :request do
 
     context 'when params are invalid' do
       it 'returns 400 Bad Request' do
+        user = create(:user)
+
         post '/api/bookings',
              params: { booking: { seat_price: '' } }.to_json,
-             headers: api_headers
+             headers: api_headers.merge({ 'Authorization' => user.token })
 
         expect(response).to have_http_status(:bad_request)
         expect(json_body['errors']['seat_price']).to include("can't be blank")
