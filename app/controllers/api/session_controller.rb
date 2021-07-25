@@ -1,6 +1,6 @@
 module Api
   class SessionController < ApplicationController
-    skip_before_action :authenticate, only:[:new]
+    skip_before_action :authenticate, only: [:new]
 
     def new # rubocop:disable Metrics/AbcSize
       user = User.find_by(email: params[:session][:email])
