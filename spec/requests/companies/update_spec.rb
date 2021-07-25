@@ -1,5 +1,5 @@
 RSpec.describe 'Companies', type: :request do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, role: 'admin') }
 
   describe 'PATCH /api/companies/:id' do
     context 'when params are valid' do

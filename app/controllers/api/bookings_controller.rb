@@ -11,12 +11,9 @@ module Api
 
     def show
       @booking = Booking.find(params[:id])
-      token = request.headers['Authorization']
-      if User.find_by(token: token).id != @booking.user_id
-        render json: { errors: { token: ['is invalid'] } }, status: :unauthorized
-      else
-        render_with_serializer(request.headers['X_API_SERIALIZER'])
-      end
+      authorize @booking
+
+      render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
     def create
@@ -30,11 +27,12 @@ module Api
       end
     end
 
-    def update # rubocop:disable Metrics/AbcSize
+    def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       if params[:booking][:user_id] && current_user.role != 'admin'
         render json: { error: 'Authorization denied' }, status: :unauthorized
       else
         @booking = Booking.find(params[:id])
+        authorize @booking
         if @booking.update(booking_params)
           render json: BookingSerializer.render(@booking, root: :booking)
         else
@@ -45,6 +43,7 @@ module Api
 
     def destroy
       @booking = Booking.find(params[:id])
+      authorize @booking
 
       if @booking.destroy
         render json: { messages: ['Booking has been deleted.'] }, status: :no_content

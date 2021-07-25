@@ -4,6 +4,5 @@ FactoryBot.define do
     first_name { 'User' }
     last_name { 'User last' }
     password { 'password' }
-    role { 'admin' }
   end
 end

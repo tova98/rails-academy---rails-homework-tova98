@@ -7,6 +7,6 @@ module Authorizable
   end
 
   def authorization_error
-    render json: { error: 'Authorization denied' }, status: :forbidden
+    render json: { errors: 'Authorization denied' }, status: :forbidden
   end
 end

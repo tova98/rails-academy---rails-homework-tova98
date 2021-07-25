@@ -1,5 +1,5 @@
 RSpec.describe 'Flights', type: :request do
-  let(:user) { create(:user) }
+  let(:user) { create(:user, role: 'admin') }
 
   describe 'POST /api/flights' do
     context 'when params are valid' do

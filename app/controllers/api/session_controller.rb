@@ -1,6 +1,6 @@
 module Api
   class SessionController < ApplicationController
-    skip_before_action :authenticate
+    skip_before_action :authenticate, only:[:new]
 
     def new # rubocop:disable Metrics/AbcSize
       user = User.find_by(email: params[:session][:email])
@@ -14,9 +14,8 @@ module Api
     end
 
     def delete
-      session.delete(:user_id)
       User.find_by(token: request.headers['Authorization']).regenerate_token
-      render json: { message: 'Logged out.' }
+      render json: { message: 'Logged out.' }, status: :no_content
     end
   end
 end
