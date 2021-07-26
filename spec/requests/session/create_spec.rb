@@ -5,7 +5,7 @@ RSpec.describe 'Session', type: :request do
     post '/api/session',
          params: { session: { email: user.email, password: 'password' } }
 
-    expect(response).to have_http_status(:ok)
+    expect(response).to have_http_status(:created)
     expect(json_body['session']).to have_key('token')
     expect(json_body['session']).to have_key('user')
   end
