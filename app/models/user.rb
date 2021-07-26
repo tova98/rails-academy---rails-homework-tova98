@@ -26,6 +26,8 @@ class User < ApplicationRecord
   has_many :bookings, dependent: :destroy
   has_many :flights, through: :bookings
 
+  enum role: { admin: 'admin' }
+
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :email, format: /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/
   validates :first_name, presence: true, length: { minimum: 2 }

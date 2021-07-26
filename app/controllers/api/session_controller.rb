@@ -2,12 +2,11 @@ module Api
   class SessionController < ApplicationController
     skip_before_action :authenticate, only: [:create]
 
-    def create # rubocop:disable Metrics/AbcSize
+    def create
       user = User.find_by(email: params[:session][:email])
       if user.authenticate(params[:session][:password])
         response.headers['Authorization'] = user.token
-        session[:user_id] = user.id
-        render json: { session: { token: user.token, user: user } }
+        render json: { session: { token: user.token, user: user } }, status: :created
       else
         render json: { errors: { credentials: ['are invalid'] } }, status: :bad_request
       end

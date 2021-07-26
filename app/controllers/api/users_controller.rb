@@ -17,7 +17,7 @@ module Api
     end
 
     def create
-      @user = User.new(user_params)
+      @user = User.new(permitted_attributes(@user))
 
       if @user.save
         render json: UserSerializer.render(@user, root: :user), status: :created
@@ -46,12 +46,6 @@ module Api
       else
         render json: { errors: @user.errors.as_json }, status: :bad_request
       end
-    end
-
-    private
-
-    def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :password)
     end
   end
 end

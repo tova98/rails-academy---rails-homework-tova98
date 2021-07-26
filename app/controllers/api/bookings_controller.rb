@@ -2,7 +2,7 @@ module Api
   class BookingsController < ApplicationController
     def index
       @bookings = Booking.all
-      # authorize @bookings
+      authorize @bookings
 
       @bookings = Booking.all.where(user_id: current_user.id) if current_user.role != 'admin'
 
@@ -17,7 +17,8 @@ module Api
     end
 
     def create
-      @booking = current_user.bookings.build(booking_params)
+      @booking = Booking.new(booking_params.merge(user_id: current_user.id))
+
       if @booking.save
         render json: BookingSerializer.render(@booking, root: :booking), status: :created
       else
@@ -28,6 +29,7 @@ module Api
     def update
       @booking = Booking.find(params[:id])
       authorize @booking
+
       if @booking.update(permitted_attributes(@booking))
         render json: BookingSerializer.render(@booking, root: :booking)
       else
