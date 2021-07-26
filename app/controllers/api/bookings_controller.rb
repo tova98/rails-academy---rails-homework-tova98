@@ -16,11 +16,16 @@ module Api
       render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
-    def create # rubocop:disable Metrics/AbcSize
+    def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       attributes = permitted_attributes(Booking.new({ seat_price: params[:booking][:seat_price],
                                                       no_of_seats: params[:booking][:no_of_seats],
                                                       flight_id: params[:booking][:flight_id] }))
-      attributes[:user_id] = current_user.id
+      attributes[:user_id] = if current_user.admin?
+                               current_user.id || params[:booking][:user_id].presence
+                             else
+                               current_user.id
+                             end
+
       @booking = Booking.new(attributes)
 
       if @booking.save
