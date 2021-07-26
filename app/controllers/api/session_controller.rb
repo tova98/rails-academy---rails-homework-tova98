@@ -1,8 +1,8 @@
 module Api
   class SessionController < ApplicationController
-    skip_before_action :authenticate, only: [:new]
+    skip_before_action :authenticate, only: [:create]
 
-    def new # rubocop:disable Metrics/AbcSize
+    def create # rubocop:disable Metrics/AbcSize
       user = User.find_by(email: params[:session][:email])
       if user.authenticate(params[:session][:password])
         response.headers['Authorization'] = user.token

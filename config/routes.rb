@@ -6,6 +6,6 @@ Rails.application.routes.draw do
     resources :bookings, only: [:index, :show, :create, :update, :destroy]
 
     delete '/session', to: 'session#delete'
-    resources :session, only: [:new, :update]
+    resources :session, only: [:create]
   end
 end

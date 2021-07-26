@@ -28,4 +28,12 @@ class UserPolicy < ApplicationPolicy
 
     user.role == 'admin'
   end
+
+  def permitted_attributes
+    if user.role == 'admin'
+      [:first_name, :last_name, :role, :password, :email]
+    else
+      [:first_name, :last_name, :password, :email]
+    end
+  end
 end

@@ -17,9 +17,7 @@ module Api
     end
 
     def create
-      token = request.headers['Authorization']
-      params['booking']['user_id'] = User.find_by(token: token).id
-      @booking = Booking.new(booking_params)
+      @booking = current_user.bookings.build(booking_params)
       if @booking.save
         render json: BookingSerializer.render(@booking, root: :booking), status: :created
       else
@@ -27,17 +25,13 @@ module Api
       end
     end
 
-    def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      if params[:booking][:user_id] && current_user.role != 'admin'
-        render json: { error: 'Authorization denied' }, status: :unauthorized
+    def update
+      @booking = Booking.find(params[:id])
+      authorize @booking
+      if @booking.update(permitted_attributes(@booking))
+        render json: BookingSerializer.render(@booking, root: :booking)
       else
-        @booking = Booking.find(params[:id])
-        authorize @booking
-        if @booking.update(booking_params)
-          render json: BookingSerializer.render(@booking, root: :booking)
-        else
-          render json: { errors: @booking.errors.as_json }, status: :bad_request
-        end
+        render json: { errors: @booking.errors.as_json }, status: :bad_request
       end
     end
 
@@ -55,7 +49,7 @@ module Api
     private
 
     def booking_params
-      params.require(:booking).permit(:no_of_seats, :seat_price, :user_id, :flight_id)
+      params.require(:booking).permit(:no_of_seats, :seat_price, :flight_id)
     end
   end
 end

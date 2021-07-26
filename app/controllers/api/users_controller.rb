@@ -26,19 +26,14 @@ module Api
       end
     end
 
-    def update # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      if (params[:id].to_i != current_user.id || params[:user][:role].present?) &&
-         current_user.role != 'admin'
-        render json: { error: 'Authorization denied' }, status: :forbidden
-      else
-        @user = User.find(params[:id])
-        authorize @user
+    def update
+      @user = User.find(params[:id])
+      authorize @user
 
-        if @user.update(user_params)
-          render json: UserSerializer.render(@user, root: :user)
-        else
-          render json: { errors: @user.errors.as_json }, status: :bad_request
-        end
+      if @user.update(permitted_attributes(@user))
+        render json: UserSerializer.render(@user, root: :user)
+      else
+        render json: { errors: @user.errors.as_json }, status: :bad_request
       end
     end
 
@@ -56,7 +51,7 @@ module Api
     private
 
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :password, :role)
+      params.require(:user).permit(:first_name, :last_name, :email, :password)
     end
   end
 end

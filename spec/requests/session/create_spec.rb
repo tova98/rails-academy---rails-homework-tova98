@@ -2,8 +2,8 @@ RSpec.describe 'Session', type: :request do
   it 'returns user and token, logged in' do
     user = create(:user, password: 'password')
 
-    get '/api/session/new',
-        params: { session: { email: user.email, password: 'password' } }
+    post '/api/session',
+         params: { session: { email: user.email, password: 'password' } }
 
     expect(response).to have_http_status(:ok)
     expect(json_body['session']).to have_key('token')
@@ -13,8 +13,8 @@ RSpec.describe 'Session', type: :request do
   it 'returns error, missing parameter' do
     user = create(:user, password: 'password')
 
-    get '/api/session/new',
-        params: { session: { email: user.email } }
+    post '/api/session',
+         params: { session: { email: user.email } }
 
     expect(response).to have_http_status(:bad_request)
     expect(json_body['errors']['credentials']).to include('are invalid')
@@ -23,8 +23,8 @@ RSpec.describe 'Session', type: :request do
   it 'returns error, invalid credentials' do
     user = create(:user, password: 'password')
 
-    get '/api/session/new',
-        params: { session: { email: user.email, password: 'invalid' } }
+    post '/api/session',
+         params: { session: { email: user.email, password: 'invalid' } }
 
     expect(response).to have_http_status(:bad_request)
     expect(json_body['errors']['credentials']).to include('are invalid')

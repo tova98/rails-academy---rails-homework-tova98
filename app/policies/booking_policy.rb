@@ -26,4 +26,12 @@ class BookingPolicy < ApplicationPolicy
 
     user.role == 'admin'
   end
+
+  def permitted_attributes
+    if user.role == 'admin'
+      [:seat_price, :no_of_seats, :user_id, :flight_id]
+    else
+      [:seat_price, :no_of_seats, :flight_id]
+    end
+  end
 end
