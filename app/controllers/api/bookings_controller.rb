@@ -16,8 +16,12 @@ module Api
       render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
-    def create
-      @booking = Booking.new(booking_params.merge(user_id: current_user.id))
+    def create # rubocop:disable Metrics/AbcSize
+      attributes = permitted_attributes(Booking.new({ seat_price: params[:booking][:seat_price],
+                                                      no_of_seats: params[:booking][:no_of_seats],
+                                                      flight_id: params[:booking][:flight_id] }))
+      attributes[:user_id] = current_user.id
+      @booking = Booking.new(attributes)
 
       if @booking.save
         render json: BookingSerializer.render(@booking, root: :booking), status: :created

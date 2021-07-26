@@ -15,6 +15,14 @@ class BookingPolicy < ApplicationPolicy
     user.role == 'admin'
   end
 
+  def create?
+    return if user.nil?
+
+    return true if user.id == record.user_id
+
+    user.role == 'admin'
+  end
+
   def update?
     return if user.nil?
 

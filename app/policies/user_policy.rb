@@ -30,6 +30,8 @@ class UserPolicy < ApplicationPolicy
   end
 
   def permitted_attributes
+    return [:first_name, :last_name, :password, :email] if user.nil?
+
     if user.role == 'admin'
       [:first_name, :last_name, :role, :password, :email]
     else

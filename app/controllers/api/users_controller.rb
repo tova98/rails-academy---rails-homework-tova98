@@ -16,8 +16,12 @@ module Api
       render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
-    def create
-      @user = User.new(user_params)
+    def create # rubocop:disable Metrics/AbcSize
+      attributes = permitted_attributes(User.new({ first_name: params[:user][:first_name],
+                                                   email: params[:user][:email],
+                                                   password: params[:user][:password],
+                                                   role: params[:user][:role] }))
+      @user = User.new(attributes)
 
       if @user.save
         render json: UserSerializer.render(@user, root: :user), status: :created
