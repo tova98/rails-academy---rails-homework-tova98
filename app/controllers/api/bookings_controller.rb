@@ -21,7 +21,7 @@ module Api
                                                       no_of_seats: params[:booking][:no_of_seats],
                                                       flight_id: params[:booking][:flight_id] }))
       attributes[:user_id] = if current_user.admin?
-                               current_user.id || params[:booking][:user_id].presence
+                               params[:booking][:user_id].presence || current_user.id
                              else
                                current_user.id
                              end
