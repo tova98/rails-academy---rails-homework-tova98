@@ -22,8 +22,8 @@ module Api
     include ActiveModel::Model
     attr_accessor :token, :user
 
-    def initialize(new_user)
-      @user = new_user
+    def initialize(user)
+      @user = user
       @token = @user.token if @user.present?
     end
 
