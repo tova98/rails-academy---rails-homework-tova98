@@ -1,44 +1,14 @@
 class BookingPolicy < ApplicationPolicy
-  def index?
-    return if user.nil?
-
-    return true if record.find { |b| b.user_id == user.id }
-
-    user.admin?
-  end
-
   def show?
-    return if user.nil?
-
-    return true if user.id == record.user_id
-
-    user.admin?
-  end
-
-  def create?
-    return if user.nil?
-
-    record.user_id = user.id if record.user_id.nil?
-
-    return true if user.id == record.user_id
-
-    user.admin?
+    user.admin? || record.user == user
   end
 
   def update?
-    return if user.nil?
-
-    return true if user.id == record.user_id
-
-    user.admin?
+    user.admin? || record.user == user
   end
 
   def destroy?
-    return if user.nil?
-
-    return true if user.id == record.user_id
-
-    user.admin?
+    user.admin? || record.user == user
   end
 
   def permitted_attributes
@@ -54,7 +24,7 @@ class BookingPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       else
-        scope.where(user_id: user.id)
+        scope.where(user: user)
       end
     end
   end

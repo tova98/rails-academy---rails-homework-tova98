@@ -4,15 +4,14 @@ module Api
 
     def create
       user = User.find_by(email: params[:session][:email])
-      if user.authenticate(params[:session][:password])
-        response.headers['Authorization'] = user.token
+      if !user.nil? && user.authenticate(params[:session][:password])
         render json: { session: { token: user.token, user: user } }, status: :created
       else
         render json: { errors: { credentials: ['are invalid'] } }, status: :bad_request
       end
     end
 
-    def delete
+    def destroy
       current_user.regenerate_token
       render json: { message: 'Logged out.' }, status: :no_content
     end

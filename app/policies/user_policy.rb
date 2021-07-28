@@ -1,41 +1,22 @@
 class UserPolicy < ApplicationPolicy
   def index?
-    return if user.nil?
-
     user.admin?
   end
 
   def show?
-    return if user.nil?
-
-    return true if user.id == record.id
-
-    user.admin?
+    user.admin? || record == user
   end
 
   def update?
-    return if user.nil?
-
-    return true if user.id == record.id
-
-    user.admin?
+    user.admin? || record == user
   end
 
   def destroy?
-    return if user.nil?
-
-    return true if user.id == record.id
-
-    user.admin?
+    user.admin? || record == user
   end
 
   def permitted_attributes
-    return [:first_name, :last_name, :password, :email] if user.nil?
-
-    if user.admin?
-      [:first_name, :last_name, :role, :password, :email]
-    else
-      [:first_name, :last_name, :password, :email]
-    end
+    allowed_list = [:first_name, :last_name, :password, :email]
+    user&.admin? ? allowed_list.push(:role) : allowed_list
   end
 end

@@ -1,7 +1,7 @@
 module Api
   class BookingsController < ApplicationController
     def index
-      @bookings = authorize policy_scope(Booking)
+      @bookings = policy_scope(Booking)
 
       render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
     end
@@ -13,7 +13,8 @@ module Api
     end
 
     def create
-      @booking = authorize Booking.new(permitted_attributes(Booking))
+      @booking = Booking.new(permitted_attributes(Booking))
+      @booking.user_id = current_user.id if @booking.user_id.nil?
 
       if @booking.save
         render json: BookingSerializer.render(@booking, root: :booking), status: :created
@@ -40,12 +41,6 @@ module Api
       else
         render json: { errors: @booking.errors.as_json }, status: :bad_request
       end
-    end
-
-    private
-
-    def booking_params
-      params.require(:booking).permit(:no_of_seats, :seat_price, :flight_id)
     end
   end
 end
