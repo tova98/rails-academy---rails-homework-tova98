@@ -3,25 +3,19 @@ module Api
     skip_before_action :authenticate, only: [:create]
 
     def index
-      @users = User.all
-      authorize @users
+      @users = authorize User.all
 
       render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show
-      @user = User.find(params[:id])
-      authorize @user
+      @user = authorize User.find(params[:id])
 
       render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
-    def create # rubocop:disable Metrics/AbcSize
-      attributes = permitted_attributes(User.new({ first_name: params[:user][:first_name],
-                                                   email: params[:user][:email],
-                                                   password: params[:user][:password],
-                                                   role: params[:user][:role] }))
-      @user = User.new(attributes)
+    def create
+      @user = User.new(permitted_attributes(User))
 
       if @user.save
         render json: UserSerializer.render(@user, root: :user), status: :created
@@ -31,8 +25,7 @@ module Api
     end
 
     def update
-      @user = User.find(params[:id])
-      authorize @user
+      @user = authorize User.find(params[:id])
 
       if @user.update(permitted_attributes(@user))
         render json: UserSerializer.render(@user, root: :user)
@@ -42,8 +35,7 @@ module Api
     end
 
     def destroy
-      @user = User.find(params[:id])
-      authorize @user
+      @user = authorize User.find(params[:id])
 
       if @user.destroy
         render json: { messages: ['User has been deleted.'] }, status: :no_content

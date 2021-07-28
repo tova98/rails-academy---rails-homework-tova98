@@ -13,7 +13,7 @@ module Api
     end
 
     def delete
-      User.find_by(token: request.headers['Authorization']).regenerate_token
+      current_user.regenerate_token
       render json: { message: 'Logged out.' }, status: :no_content
     end
   end

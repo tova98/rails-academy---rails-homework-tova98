@@ -2,7 +2,7 @@ class UserPolicy < ApplicationPolicy
   def index?
     return if user.nil?
 
-    user.role == 'admin'
+    user.admin?
   end
 
   def show?
@@ -10,7 +10,7 @@ class UserPolicy < ApplicationPolicy
 
     return true if user.id == record.id
 
-    user.role == 'admin'
+    user.admin?
   end
 
   def update?
@@ -18,7 +18,7 @@ class UserPolicy < ApplicationPolicy
 
     return true if user.id == record.id
 
-    user.role == 'admin'
+    user.admin?
   end
 
   def destroy?
@@ -26,13 +26,13 @@ class UserPolicy < ApplicationPolicy
 
     return true if user.id == record.id
 
-    user.role == 'admin'
+    user.admin?
   end
 
   def permitted_attributes
     return [:first_name, :last_name, :password, :email] if user.nil?
 
-    if user.role == 'admin'
+    if user.admin?
       [:first_name, :last_name, :role, :password, :email]
     else
       [:first_name, :last_name, :password, :email]

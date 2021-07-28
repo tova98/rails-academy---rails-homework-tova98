@@ -1,32 +1,19 @@
 module Api
   class BookingsController < ApplicationController
     def index
-      @bookings = Booking.all
-      authorize @bookings
-
-      @bookings = Booking.all.where(user_id: current_user.id) if current_user.role != 'admin'
+      @bookings = authorize policy_scope(Booking)
 
       render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show
-      @booking = Booking.find(params[:id])
-      authorize @booking
+      @booking = authorize Booking.find(params[:id])
 
       render_with_serializer(request.headers['X_API_SERIALIZER'])
     end
 
-    def create # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-      attributes = permitted_attributes(Booking.new({ seat_price: params[:booking][:seat_price],
-                                                      no_of_seats: params[:booking][:no_of_seats],
-                                                      flight_id: params[:booking][:flight_id] }))
-      attributes[:user_id] = if current_user.admin?
-                               params[:booking][:user_id].presence || current_user.id
-                             else
-                               current_user.id
-                             end
-
-      @booking = Booking.new(attributes)
+    def create
+      @booking = authorize Booking.new(permitted_attributes(Booking))
 
       if @booking.save
         render json: BookingSerializer.render(@booking, root: :booking), status: :created
@@ -36,8 +23,7 @@ module Api
     end
 
     def update
-      @booking = Booking.find(params[:id])
-      authorize @booking
+      @booking = authorize Booking.find(params[:id])
 
       if @booking.update(permitted_attributes(@booking))
         render json: BookingSerializer.render(@booking, root: :booking)
@@ -47,8 +33,7 @@ module Api
     end
 
     def destroy
-      @booking = Booking.find(params[:id])
-      authorize @booking
+      @booking = authorize Booking.find(params[:id])
 
       if @booking.destroy
         render json: { messages: ['Booking has been deleted.'] }, status: :no_content
