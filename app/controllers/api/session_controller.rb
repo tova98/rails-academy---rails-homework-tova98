@@ -4,8 +4,10 @@ module Api
 
     def create
       user = User.find_by(email: params[:session][:email])
-      if !user.nil? && user.authenticate(params[:session][:password])
-        render json: { session: { token: user.token, user: user } }, status: :created
+      @session = Session.new(user)
+
+      if @session.valid?(params[:session][:password])
+        render json: SessionSerializer.render(@session, root: :session), status: :created
       else
         render json: { errors: { credentials: ['are invalid'] } }, status: :bad_request
       end
@@ -15,5 +17,25 @@ module Api
       current_user.regenerate_token
       render json: { message: 'Logged out.' }, status: :no_content
     end
+  end
+
+  class Session
+    include ActiveModel::Model
+    attr_accessor :token, :user
+
+    def initialize(new_user)
+      @user = new_user
+      @token = @user.token if @user.present?
+    end
+
+    def valid?(password)
+      @user.authenticate(password) if @user.present?
+    end
+  end
+
+  class SessionSerializer < Blueprinter::Base
+    field :token
+
+    association :user, blueprint: UserSerializer
   end
 end

@@ -13,8 +13,7 @@ module Api
     end
 
     def create
-      @booking = Booking.new(permitted_attributes(Booking))
-      @booking.user_id = current_user.id if @booking.user_id.nil?
+      @booking = Booking.new({ user: current_user }.merge(permitted_attributes(Booking)))
 
       if @booking.save
         render json: BookingSerializer.render(@booking, root: :booking), status: :created
