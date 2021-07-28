@@ -3,8 +3,7 @@ module Api
     skip_before_action :authenticate, only: [:create]
 
     def create
-      user = User.find_by(email: params[:session][:email])
-      @session = Session.new(user)
+      @session = Session.new(User.find_by(email: params[:session][:email]))
 
       if @session.valid?(params[:session][:password])
         render json: SessionSerializer.render(@session, root: :session), status: :created
