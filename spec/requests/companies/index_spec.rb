@@ -1,4 +1,6 @@
 RSpec.describe 'Companies', type: :request do
+  let(:user) { create(:user) }
+
   before do
     create_list(:company, 3)
   end

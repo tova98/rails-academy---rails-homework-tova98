@@ -3,14 +3,23 @@
 # Table name: flights
 #
 #  id          :bigint           not null, primary key
+#  arrives_at  :datetime         not null
+#  base_price  :integer          not null
+#  departs_at  :datetime         not null
 #  name        :string           not null
 #  no_of_seats :integer
-#  base_price  :float            not null
-#  departs_at  :datetime         not null
-#  arrives_at  :datetime         not null
-#  company_id  :bigint
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  company_id  :bigint
+#
+# Indexes
+#
+#  index_flights_on_company_id           (company_id)
+#  index_flights_on_name_and_company_id  (name,company_id) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (company_id => companies.id)
 #
 class Flight < ApplicationRecord
   belongs_to :company

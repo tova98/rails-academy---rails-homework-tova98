@@ -6,6 +6,6 @@ module RecordNotFoundRescue
   end
 
   def rescue_from_not_found
-    render json: { errors: ["#{controller_name.classify} not found."] }
+    render json: { errors: ["#{controller_name.classify} not found."] }, status: :bad_request
   end
 end

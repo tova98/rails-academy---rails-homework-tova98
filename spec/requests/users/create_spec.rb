@@ -3,15 +3,14 @@ RSpec.describe 'Users', type: :request do
     context 'when params are valid' do
       it 'creates a user' do
         user_attributes = attributes_for(:user).stringify_keys
-
         expect do
           post '/api/users',
-               params: user_attributes.to_json,
+               params: { user: user_attributes }.to_json,
                headers: api_headers
         end.to change(User, :count).by(1)
 
         expect(response).to have_http_status(:created)
-        expect(json_body['user']).to include(user_attributes)
+        expect(json_body['user']).to include(user_attributes.except('password'))
       end
     end
 

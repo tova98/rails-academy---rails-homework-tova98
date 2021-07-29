@@ -10,5 +10,13 @@ module TestHelpers
         'Accept': 'application/json'
       }
     end
+
+    def auth_headers(user)
+      {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': user.token
+      }
+    end
   end
 end

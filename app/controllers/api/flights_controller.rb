@@ -1,5 +1,7 @@
 module Api
   class FlightsController < ApplicationController
+    skip_before_action :authenticate, only: [:index, :show]
+
     def index
       @flights = Flight.all
 
@@ -13,7 +15,7 @@ module Api
     end
 
     def create
-      @flight = Flight.new(flight_params)
+      @flight = authorize Flight.new(flight_params)
 
       if @flight.save
         render json: FlightSerializer.render(@flight, root: :flight),
@@ -24,7 +26,7 @@ module Api
     end
 
     def update
-      @flight = Flight.find(params[:id])
+      @flight = authorize Flight.find(params[:id])
 
       if @flight.update(flight_params)
         render json: FlightSerializer.render(@flight, root: :flight)
@@ -34,7 +36,7 @@ module Api
     end
 
     def destroy
-      @flight = Flight.find(params[:id])
+      @flight = authorize Flight.find(params[:id])
 
       if @flight.destroy
         render json: { messages: ['Flight has been deleted.'] }, status: :no_content
