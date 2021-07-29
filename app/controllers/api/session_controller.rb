@@ -17,24 +17,4 @@ module Api
       render json: { message: 'Logged out.' }, status: :no_content
     end
   end
-
-  class Session
-    include ActiveModel::Model
-    attr_accessor :token, :user
-
-    def initialize(user)
-      @user = user
-      @token = @user.token if @user.present?
-    end
-
-    def valid?(password)
-      @user.authenticate(password) if @user.present?
-    end
-  end
-
-  class SessionSerializer < Blueprinter::Base
-    field :token
-
-    association :user, blueprint: UserSerializer
-  end
 end
