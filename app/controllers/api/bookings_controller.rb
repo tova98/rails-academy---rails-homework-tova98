@@ -1,9 +1,13 @@
 module Api
   class BookingsController < ApplicationController
     def index
-      @bookings = policy_scope(Booking)
+      @bookings = BookingsQuery.new(policy_scope(Booking)).sorted
 
-      render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
+      if params[:filter].present? && params[:filter] == 'active'
+        @bookings = BookingsQuery.new(@bookings).with_active_flights
+      end
+
+      render_with_root(@bookings, request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show

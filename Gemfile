@@ -29,7 +29,6 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'blueprinter'
 gem 'faraday'
 gem 'jsonapi-serializer'
-gem 'nilify_blanks'
 gem 'pg'
 gem 'pundit'
 

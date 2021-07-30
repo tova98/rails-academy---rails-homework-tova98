@@ -29,10 +29,19 @@ class Booking < ApplicationRecord
   validates_associated :flight
   validate :flight_in_past
 
+  validate :total_booked_seats
+
   def flight_in_past
     return unless flight.present? && flight.departs_at.present? &&
                   flight.departs_at.before?(DateTime.current)
 
     errors.add(:flight, 'must not be in past')
+  end
+
+  def total_booked_seats
+    return unless flight.present? && Booking.where(flight_id: flight.id)
+                                            .sum(:no_of_seats) + no_of_seats > flight.no_of_seats
+
+    errors.add(:flight, "can't be overbooked")
   end
 end

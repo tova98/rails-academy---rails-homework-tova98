@@ -3,9 +3,13 @@ module Api
     skip_before_action :authenticate, only: [:index, :show]
 
     def index
-      @companies = Company.all
+      @companies = CompaniesQuery.new(Company.all).sorted
 
-      render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
+      if params[:filter].present? && params[:filter] == 'active'
+        @companies = CompaniesQuery.new(@companies).with_active_flights
+      end
+
+      render_with_root(@companies, request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show

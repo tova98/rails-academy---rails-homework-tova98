@@ -27,17 +27,27 @@ class Flight < ApplicationRecord
   has_many :bookings, dependent: :destroy
   has_many :users, through: :bookings
 
+  scope :active, -> { where('departs_at > ?', DateTime.current) }
+
   validates :name, presence: true, uniqueness: { case_sensitive: false, scope: :company_id }
   validates :no_of_seats, presence: true, numericality: { greater_than: 0 }
   validates :departs_at, presence: true
   validates :arrives_at, presence: true
   validate :departs_before_arrives
   validates :base_price, presence: true, numericality: { greater_than: 0 }
+  validate :overlap
 
   def departs_before_arrives
     return unless departs_at.present? && arrives_at.present?
     return if departs_at.before? arrives_at
 
     errors.add(:departs_at, 'must depart before it arrives')
+  end
+
+  def overlap
+    return if Flight.find_by(company_id: company_id).blank?
+    return unless Flight.find_by(company_id: company_id).arrives_at.after? departs_at
+
+    errors.add(:flight, "can't overlap")
   end
 end
