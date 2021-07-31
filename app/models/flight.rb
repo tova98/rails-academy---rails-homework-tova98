@@ -51,13 +51,13 @@ class Flight < ApplicationRecord
   end
 
   def overlap_departs(existing_flight)
-    return true if arrives_at.before?(existing_flight.departs_at)
+    return true if departs_at >= (existing_flight.arrives_at)
 
     errors.add(:departs_at, "can't overlap")
   end
 
   def overlap_arrives(existing_flight)
-    return true if departs_at.after?(existing_flight.arrives_at)
+    return true if arrives_at <= (existing_flight.departs_at)
 
     errors.add(:arrives_at, "can't overlap")
   end

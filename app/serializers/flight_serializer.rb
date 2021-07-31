@@ -21,8 +21,10 @@ class FlightSerializer < Blueprinter::Base
     days_before = (flight.departs_at.to_date - DateTime.current.to_date).round
     if days_before >= 15
       flight.base_price
+    elsif days_before <= 0
+      flight.base_price * 2
     else
-      ((days_before / 15.0) * flight.base_price + flight.base_price).round
+      (((15 - days_before) / 15.0) * flight.base_price + flight.base_price).round
     end
   end
 
