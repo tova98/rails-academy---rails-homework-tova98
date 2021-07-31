@@ -45,7 +45,7 @@ class Flight < ApplicationRecord
   end
 
   def overlap
-    existing_flight = Flight.where(company_id: company_id).where.not(id: id)
+    existing_flight = Flight.where(company_id: company_id).where.not(id: id).first
     return if departs_at.blank? || arrives_at.blank? || existing_flight.blank?
     return if overlap_departs(existing_flight) || overlap_arrives(existing_flight)
   end
