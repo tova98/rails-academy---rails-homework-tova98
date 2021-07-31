@@ -11,6 +11,7 @@ class CompaniesQuery
 
   def with_active_flights
     relation.select('companies.*')
+            .distinct
             .joins(:flights)
             .where('departs_at > ?', DateTime.current)
   end
