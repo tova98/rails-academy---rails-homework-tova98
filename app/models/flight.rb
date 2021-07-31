@@ -45,9 +45,19 @@ class Flight < ApplicationRecord
   end
 
   def overlap
-    return if departs_at.blank?
-    return if Flight.find_by(company_id: company_id).blank?
-    return unless Flight.find_by(company_id: company_id).arrives_at.after? departs_at
+    existing_flight = Flight.where(company_id: company_id).where.not(id: id)
+    return if departs_at.blank? || arrives_at.blank? || existing_flight.blank?
+    return if overlap_departs || overlap_arrives
+  end
+
+  def overlap_departs
+    return true if arrives_at.before?(existing_flight.departs_at)
+
+    errors.add(:arrives_at, "can't overlap")
+  end
+
+  def overlap_arrives
+    return true if departs_at.after?(existing_flight.arrives_at)
 
     errors.add(:departs_at, "can't overlap")
   end

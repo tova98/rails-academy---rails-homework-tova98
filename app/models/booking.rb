@@ -39,8 +39,9 @@ class Booking < ApplicationRecord
   end
 
   def total_booked_seats
-    return unless flight.present? && Booking.where(flight_id: flight.id)
-                                            .sum(:no_of_seats) + no_of_seats > flight.no_of_seats
+    return if flight.blank? || no_of_seats.blank?
+    return unless Booking.where(flight_id: flight.id)
+                         .sum(:no_of_seats) + no_of_seats > flight.no_of_seats
 
     errors.add(:flight, "can't be overbooked")
   end
