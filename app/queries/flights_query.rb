@@ -18,7 +18,7 @@ class FlightsQuery
   end
 
   def with_departs_at_eq(datetime)
-    relation.where('departs_at = ?', datetime)
+    relation.where('departs_at = timestamp ?', datetime)
   end
 
   def with_no_of_available_seats_gteq(seats)
