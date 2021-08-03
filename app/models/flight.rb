@@ -62,4 +62,15 @@ class Flight < ApplicationRecord
     errors.add(:departs_at, "can't overlap")
     errors.add(:arrives_at, "can't overlap")
   end
+
+  def current_price
+    days_before = (departs_at.to_date - DateTime.current.to_date).round
+    if days_before >= 15
+      base_price
+    elsif days_before <= 0
+      base_price * 2
+    else
+      (((15 - days_before) / 15.0) * base_price + base_price).round
+    end
+  end
 end

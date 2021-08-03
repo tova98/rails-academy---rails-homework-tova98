@@ -6,7 +6,7 @@ RSpec.describe 'Bookings', type: :request do
   describe 'POST /api/bookings' do
     context 'when authorised and valid' do
       it 'creates a booking' do
-        booking_attributes = { 'no_of_seats' => 5, 'seat_price' => 300, 'flight_id' => flight.id }
+        booking_attributes = { 'no_of_seats' => 5, 'flight_id' => flight.id }
 
         expect do
           post '/api/bookings',
@@ -19,8 +19,7 @@ RSpec.describe 'Bookings', type: :request do
       end
 
       it 'creates a booking for other user' do
-        booking_attributes = { 'no_of_seats' => 5, 'seat_price' => 300,
-                               'user_id' => user.id, 'flight_id' => flight.id }
+        booking_attributes = { 'no_of_seats' => 5, 'user_id' => user.id, 'flight_id' => flight.id }
 
         expect do
           post '/api/bookings',
