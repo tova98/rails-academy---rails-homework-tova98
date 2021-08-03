@@ -1,7 +1,7 @@
 module Api
   class BookingsController < ApplicationController
     def index
-      @bookings = BookingsQuery.new(policy_scope(Booking)).sorted
+      @bookings = BookingsQuery.new(policy_scope(Booking.includes(:user, flight: :company))).sorted
 
       if params[:filter].present? && params[:filter] == 'active'
         @bookings = BookingsQuery.new(@bookings).with_active_flights

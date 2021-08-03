@@ -3,7 +3,7 @@ module Api
     skip_before_action :authenticate, only: [:index, :show]
 
     def index
-      @flights = FlightsQuery.new(Flight.all).sorted
+      @flights = FlightsQuery.new(Flight.includes(:company).all).sorted
       @flights = FlightsQuery.new(@flights).with_active_flights
 
       @flights = name_cont_filter

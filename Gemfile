@@ -33,6 +33,7 @@ gem 'pg'
 gem 'pundit'
 
 group :development, :test do
+  gem 'bullet'
   gem 'factory_bot_rails'
   gem 'overcommit', require: false
   gem 'pry-rails'
