@@ -48,7 +48,7 @@ class Booking < ApplicationRecord
 
   def total_booked_seats
     return if flight.blank? || no_of_seats.blank?
-    return unless Booking.where('flight_id = ? AND id != ?', flight.id, id)
+    return unless Booking.where('flight_id = ? AND id != COALESCE(?, -1)', flight.id, id)
                          .sum(:no_of_seats) + no_of_seats > flight.no_of_seats
 
     errors.add(:flight, "can't be overbooked")
