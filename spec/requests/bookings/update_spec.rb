@@ -5,11 +5,11 @@ RSpec.describe 'Bookings', type: :request do
     context 'when authorized and valid' do
       it 'updates booking' do
         patch "/api/bookings/#{booking.id}",
-              params: { booking: { seat_price: 450 } }.to_json,
+              params: { booking: { no_of_seats: 1 } }.to_json,
               headers: auth_headers(booking.user)
 
         expect(response).to have_http_status(:ok)
-        expect(json_body['booking']).to include('seat_price' => 450)
+        expect(json_body['booking']).to include('no_of_seats' => 1)
         expect(Booking.find(booking.id)).to be_persisted
       end
     end
@@ -17,11 +17,11 @@ RSpec.describe 'Bookings', type: :request do
     context 'when authorized and invalid' do
       it 'returns 400 Bad Request' do
         patch "/api/bookings/#{booking.id}",
-              params: { booking: { seat_price: '' } }.to_json,
+              params: { booking: { no_of_seats: '' } }.to_json,
               headers: auth_headers(booking.user)
 
         expect(response).to have_http_status(:bad_request)
-        expect(json_body['errors']['seat_price']).to include("can't be blank")
+        expect(json_body['errors']['no_of_seats']).to include("can't be blank")
       end
     end
 

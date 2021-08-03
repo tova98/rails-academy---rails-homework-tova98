@@ -15,6 +15,14 @@ class BookingPolicy < ApplicationPolicy
     if user.admin?
       [:seat_price, :no_of_seats, :user_id, :flight_id]
     else
+      [:seat_price, :no_of_seats, :flight_id]
+    end
+  end
+
+  def permitted_attributes_for_update
+    if user.admin?
+      [:seat_price, :no_of_seats, :user_id, :flight_id]
+    else
       [:no_of_seats, :flight_id]
     end
   end
