@@ -11,7 +11,7 @@ module Statistics
     end
 
     field :occupancy do |flight|
-      flight.bookings.sum(:no_of_seats) / flight.no_of_seats.to_f * 100
+      "#{flight.bookings.sum(:no_of_seats) / flight.no_of_seats.to_f * 100}%"
     end
   end
 end
