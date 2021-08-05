@@ -41,6 +41,15 @@ RSpec.describe 'Bookings', type: :request do
         expect(response).to have_http_status(:bad_request)
         expect(json_body['errors']['seat_price']).to include("can't be blank")
       end
+
+      it 'throws overbooked error' do
+        post '/api/bookings',
+             params: { booking: { no_of_seats: 100, flight_id: flight.id } }.to_json,
+             headers: auth_headers(user)
+
+        expect(response).to have_http_status(:bad_request)
+        expect(json_body['errors']['flight']).to include("can't be overbooked")
+      end
     end
 
     context 'when unauthenticated user' do

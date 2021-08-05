@@ -45,5 +45,35 @@ RSpec.describe 'Flights', type: :request do
                                              'arrives_at' => flight.arrives_at,
                                              'company_id' => flight.company_id)
     end
+
+    it 'calculates current_price > 15 days before departure' do
+      flight.update(departs_at: DateTime.current + 20, arrives_at: DateTime.current + 21,
+                    base_price: 100)
+
+      get "/api/flights/#{flight.id}"
+
+      expect(response).to have_http_status(:ok)
+      expect(json_body['flight']).to include('current_price' => 100)
+    end
+
+    it 'calculates current_price 9 days before departure' do
+      flight.update(departs_at: DateTime.current + 9, arrives_at: DateTime.current + 10,
+                    base_price: 100)
+
+      get "/api/flights/#{flight.id}"
+
+      expect(response).to have_http_status(:ok)
+      expect(json_body['flight']).to include('current_price' => 140)
+    end
+
+    it 'calculates current_price after departure' do
+      flight.update(departs_at: DateTime.current - 1, arrives_at: DateTime.current + 1,
+                    base_price: 100)
+
+      get "/api/flights/#{flight.id}"
+
+      expect(response).to have_http_status(:ok)
+      expect(json_body['flight']).to include('current_price' => 200)
+    end
   end
 end
