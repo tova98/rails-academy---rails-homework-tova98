@@ -54,11 +54,11 @@ class Flight < ApplicationRecord
   end
 
   def overlapping_flights
-    company.flights
-           .where.not(id: id)
-           .where.not('departs_at >= timestamp ? OR arrives_at <= timestamp ?',
-                      arrives_at, departs_at)
-           .all
+    Flight.where(company_id: company_id)
+          .where.not(id: id)
+          .where.not('departs_at >= timestamp ? OR arrives_at <= timestamp ?',
+                     arrives_at, departs_at)
+          .all
   end
 
   def current_price
