@@ -1,0 +1,54 @@
+h4.main_header.mb-3
+  | Flights
+  = link_to 'New', new_admin_flight_path, class: 'btn btn-success ms-2'
+
+= search_form_for [:admin, @q], html: { class: 'd-flex justify-content-center' } do |f|
+  .row.bg-light.mb-3.py-3.justify-content-center
+    .col-2
+      = f.label :name_cont, 'Name', class: 'form-label w-100 text-center'
+      = f.search_field :name_cont, class: 'form-control'
+    .col-2
+      = f.label :base_price_gteq, 'Price from', class: 'form-label w-100 text-center'
+      = f.search_field :base_price_gteq, class: 'form-control'
+    .col-2
+      = f.label :base_price_lteq, 'Price to', class: 'form-label w-100 text-center'
+      = f.search_field :base_price_lteq, class: 'form-control'
+    .col-1.col-1-5
+      = f.label :meal_type_eq, 'Meal type', class: 'form-label w-100 text-center'
+      = f.select :meal_type_eq, options_for_select(Flight.meal_types), {}, { class: 'form-select' }
+    .col-2
+      = f.label :company_name_cont, 'Company name', class: 'form-label w-100 text-center'
+      = f.search_field :company_name_cont, class: 'form-control'
+    .col-1.col-1-25
+      = f.label :search, "&nbsp;".html_safe, class: 'form-label w-100'
+      = f.submit class: 'btn btn-primary form-control'
+
+table.table.table-striped
+  thead.table-dark.flex-column.align-middle
+    th.th-order-link = sort_link(@q, :name)
+    th.th-order-link = sort_link(@q, :no_of_seats)
+    th.th-order-link = sort_link(@q, :base_price)
+    th = 'Departs at'
+    th = 'Arrives at'
+    th = 'Meal type'
+    th = 'Direct'
+    th.th-order-link = sort_link(@q, :company_name, 'Company')
+    th = ''
+    th = ''
+  tbody
+    - @flights.each do |flight|
+      tr
+        td = flight.name
+        td = flight.no_of_seats
+        td = flight.base_price
+        td = flight.departs_at
+        td = flight.arrives_at
+        td = flight.meal_type
+        td = flight.direct
+        td = flight.company_name
+        td = link_to 'Edit', edit_admin_flight_path(flight),
+              class: 'btn btn-primary btn-sm'
+        td = link_to 'Delete', admin_flight_path(flight), method: :delete,
+              data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm'
+
+= paginate @flights
