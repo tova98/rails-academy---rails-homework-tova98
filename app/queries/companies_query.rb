@@ -15,4 +15,12 @@ class CompaniesQuery
             .joins(:flights)
             .where('departs_at > ?', DateTime.current)
   end
+
+  def self.all(scope, params)
+    @companies = CompaniesQuery.new(scope).sorted
+
+    return @companies unless params['filter'].present? && params['filter'] == 'active'
+
+    @companies = CompaniesQuery.new(@companies).with_active_flights
+  end
 end

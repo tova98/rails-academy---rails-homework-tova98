@@ -1,4 +1,4 @@
-RSpec.describe 'Flights statistics', type: :request do
+RSpec.describe 'Companies statistics', type: :request do
   let(:user) { create(:user, role: 'admin') }
 
   before do

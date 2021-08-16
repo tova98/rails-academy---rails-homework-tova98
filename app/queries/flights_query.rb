@@ -27,4 +27,15 @@ class FlightsQuery
             .group(:id)
             .having('flights.no_of_seats - COALESCE(SUM(bookings.no_of_seats), 0) >= ?', seats)
   end
+
+  def self.filtered(flights, name_filter, departs_at_filter, seats_filter)
+    flights = FlightsQuery.new(flights).with_name_contains(name_filter) if name_filter.present?
+    if departs_at_filter.present?
+      flights = FlightsQuery.new(flights).with_departs_at_eq(departs_at_filter)
+    end
+    if seats_filter.present?
+      flights = FlightsQuery.new(flights).with_no_of_available_seats_gteq(seats_filter)
+    end
+    flights
+  end
 end
