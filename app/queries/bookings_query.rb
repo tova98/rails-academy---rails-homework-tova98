@@ -1,6 +1,14 @@
 class BookingsQuery
   attr_reader :relation
 
+  def self.all(scope, params)
+    sorted_records = new(scope).sorted
+
+    return sorted_records unless params['filter'].present? && params['filter'] == 'active'
+
+    new(sorted_records).with_active_flights
+  end
+
   def initialize(relation = Booking.all)
     @relation = relation
   end
@@ -15,13 +23,5 @@ class BookingsQuery
     relation.select('bookings.*')
             .joins(:flight)
             .where('departs_at > ?', DateTime.current)
-  end
-
-  def self.all(scope, params)
-    @bookings = BookingsQuery.new(scope).sorted
-
-    return @bookings unless params['filter'].present? && params['filter'] == 'active'
-
-    @bookings = BookingsQuery.new(@bookings).with_active_flights
   end
 end

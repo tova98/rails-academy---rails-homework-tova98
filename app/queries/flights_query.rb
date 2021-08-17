@@ -1,6 +1,13 @@
 class FlightsQuery
   attr_reader :relation
 
+  def self.filtered(records, name_filter, departs_at_filter, seats_filter)
+    records = new(records).with_name_contains(name_filter) if name_filter.present?
+    records = new(records).with_departs_at_eq(departs_at_filter) if departs_at_filter.present?
+    records = new(records).with_no_of_available_seats_gteq(seats_filter) if seats_filter.present?
+    records
+  end
+
   def initialize(relation = Flight.all)
     @relation = relation
   end
@@ -26,16 +33,5 @@ class FlightsQuery
             .left_outer_joins(:bookings)
             .group(:id)
             .having('flights.no_of_seats - COALESCE(SUM(bookings.no_of_seats), 0) >= ?', seats)
-  end
-
-  def self.filtered(flights, name_filter, departs_at_filter, seats_filter)
-    flights = FlightsQuery.new(flights).with_name_contains(name_filter) if name_filter.present?
-    if departs_at_filter.present?
-      flights = FlightsQuery.new(flights).with_departs_at_eq(departs_at_filter)
-    end
-    if seats_filter.present?
-      flights = FlightsQuery.new(flights).with_no_of_available_seats_gteq(seats_filter)
-    end
-    flights
   end
 end
