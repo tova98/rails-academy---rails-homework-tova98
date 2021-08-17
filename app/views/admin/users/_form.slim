@@ -1,0 +1,8 @@
+= simple_form_for [:admin, user], html: { class: 'bg-light p-4'}, defaults: { wrapper_html: { class: 'col-6' } } do |f|
+  .row.mb-3
+    = f.input :first_name
+    = f.input :last_name
+    = f.input :email
+    = f.input :password
+    = f.input :role
+  = f.submit 'Save', class: 'btn btn-primary mt-3'

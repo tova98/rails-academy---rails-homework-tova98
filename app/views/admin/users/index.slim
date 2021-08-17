@@ -1,0 +1,40 @@
+h4.main_header.mb-3
+  | Users
+  = link_to 'New', new_admin_user_path, class: 'btn btn-success ms-2'
+
+= search_form_for [:admin, @q], html: { class: 'd-flex justify-content-center' } do |f|
+  .row.bg-light.mb-3.p-3.justify-content-center
+    .col-3
+      = f.label :first_name_cont, 'First name', class: 'form-label w-100 text-center'
+      = f.search_field :first_name_cont, class: 'form-control'
+    .col-3
+      = f.label :last_name_cont, 'Last name', class: 'form-label w-100 text-center'
+      = f.search_field :last_name_cont, class: 'form-control'
+    .col-3
+      = f.label :email_cont, 'E-mail', class: 'form-label w-100 text-center'
+      = f.search_field :email_cont, class: 'form-control'
+    .col-2
+      = f.label :search, "&nbsp;".html_safe, class: 'form-label w-100'
+      = f.submit class: 'btn btn-primary form-control'
+
+table.table.table-striped
+  thead.table-dark.flex-column.align-middle
+    th.th-order-link = sort_link(@q, :first_name)
+    th.th-order-link = sort_link(@q, :last_name)
+    th.th-order-link = sort_link(@q, :email)
+    th = 'Role'
+    th = ''
+    th = ''
+  tbody
+    - @users.each do |user|
+      tr
+        td = user.first_name
+        td = user.last_name
+        td = user.email
+        td = user.role
+        td = link_to 'Edit', edit_admin_user_path(user),
+              class: 'btn btn-primary btn-sm'
+        td = link_to 'Delete', admin_user_path(user), method: :delete,
+              data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm'
+
+= paginate @users
