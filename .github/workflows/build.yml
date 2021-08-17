@@ -82,6 +82,9 @@ jobs:
       - name: Setup DB
         run: bundle exec rails db:test:prepare
 
+      - name: Install front dependencies
+        run: yarn
+
       - name: Run FTP specs
         shell: bash
         env:
