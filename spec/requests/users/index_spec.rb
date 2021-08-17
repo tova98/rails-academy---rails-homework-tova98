@@ -45,4 +45,13 @@ RSpec.describe 'Users', type: :request do
       expect(json_body['errors']['resource']).to include('is forbidden')
     end
   end
+
+  it 'filters by name' do
+    create(:user, first_name: 'Ai', last_name: 'Ao', email: 'a@a.at')
+
+    get '/api/users?query=ao', headers: auth_headers(User.first)
+
+    expect(response).to have_http_status(:ok)
+    expect(json_body['users'].size).to eq(1)
+  end
 end

@@ -5,5 +5,10 @@ Rails.application.routes.draw do
     resources :flights, only: [:index, :show, :create, :update, :destroy]
     resources :bookings, only: [:index, :show, :create, :update, :destroy]
     resource :session, only: [:create, :destroy], controller: :session
+
+    namespace :statistics do
+      resources :flights, only: [:index]
+      resources :companies, only: [:index]
+    end
   end
 end

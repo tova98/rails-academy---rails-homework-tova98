@@ -70,6 +70,9 @@ GEM
     bindex (0.8.1)
     blueprinter (0.25.3)
     builder (3.2.4)
+    bullet (6.1.4)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     capybara (3.35.3)
       addressable
       mini_mime (>= 0.1.3)
@@ -129,9 +132,6 @@ GEM
     mini_mime (1.1.0)
     minitest (5.14.4)
     multipart-post (2.1.1)
-    nilify_blanks (1.4.0)
-      activerecord (>= 4.0.0)
-      activesupport (>= 4.0.0)
     nio4r (2.5.7)
     nokogiri (1.11.7-x86_64-linux)
       racc (~> 1.4)
@@ -262,6 +262,7 @@ GEM
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.0.0)
+    uniform_notifier (1.14.2)
     web-console (4.1.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -290,13 +291,13 @@ DEPENDENCIES
   annotate
   bcrypt (~> 3.1.7)
   blueprinter
+  bullet
   capybara (>= 3.26)
   factory_bot_rails
   faraday
   jbuilder (~> 2.7)
   jsonapi-serializer
   listen (~> 3.3)
-  nilify_blanks
   overcommit
   pg
   pry-rails

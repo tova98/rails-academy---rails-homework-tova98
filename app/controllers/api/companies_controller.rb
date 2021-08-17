@@ -3,9 +3,9 @@ module Api
     skip_before_action :authenticate, only: [:index, :show]
 
     def index
-      @companies = Company.all
+      @companies = CompaniesQuery.all(Company.all, params)
 
-      render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
+      render_with_root(@companies, request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show

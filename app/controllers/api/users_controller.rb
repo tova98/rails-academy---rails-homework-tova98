@@ -3,9 +3,11 @@ module Api
     skip_before_action :authenticate, only: [:create]
 
     def index
-      @users = authorize User.all
+      @users = authorize UsersQuery.new(User.all).sorted
 
-      render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
+      @users = query_filter
+
+      render_with_root(@users, request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show
@@ -42,6 +44,14 @@ module Api
       else
         render json: { errors: @user.errors.as_json }, status: :bad_request
       end
+    end
+
+    private
+
+    def query_filter
+      return @users if params[:query].blank?
+
+      UsersQuery.new(@users).with_query(params[:query])
     end
   end
 end

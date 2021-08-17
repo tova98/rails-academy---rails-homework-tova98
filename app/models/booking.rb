@@ -24,15 +24,33 @@ class Booking < ApplicationRecord
   belongs_to :user
   belongs_to :flight
 
+  before_validation :update_seat_price, on: :create
+
   validates :seat_price, presence: true, numericality: { greater_than: 0 }
   validates :no_of_seats, presence: true, numericality: { greater_than: 0 }
   validates_associated :flight
   validate :flight_in_past
+
+  validate :total_booked_seats
+
+  def update_seat_price
+    return if flight.blank?
+
+    self.seat_price = flight.current_price
+  end
 
   def flight_in_past
     return unless flight.present? && flight.departs_at.present? &&
                   flight.departs_at.before?(DateTime.current)
 
     errors.add(:flight, 'must not be in past')
+  end
+
+  def total_booked_seats
+    return if flight.blank? || no_of_seats.blank?
+    return unless Booking.where('flight_id = ? AND id != COALESCE(?, -1)', flight.id, id)
+                         .sum(:no_of_seats) + no_of_seats > flight.no_of_seats
+
+    errors.add(:flight, "can't be overbooked")
   end
 end

@@ -10,4 +10,8 @@ class FlightPolicy < ApplicationPolicy
   def destroy?
     user.admin?
   end
+
+  def statistics_index?
+    user.admin?
+  end
 end

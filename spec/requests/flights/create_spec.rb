@@ -54,5 +54,16 @@ RSpec.describe 'Flights', type: :request do
         expect(json_body['errors']['resource']).to include('is forbidden')
       end
     end
+
+    it 'throws overlap error' do
+      company = create(:company)
+      create(:flight, name: 'test', company_id: company.id)
+
+      post '/api/flights/', params: create(:flight).attributes.to_json, headers: auth_headers(user)
+
+      expect(response).to have_http_status(:bad_request)
+      expect(json_body['errors']).to include('arrives_at' => ["can't overlap"])
+      expect(json_body['errors']).to include('departs_at' => ["can't overlap"])
+    end
   end
 end

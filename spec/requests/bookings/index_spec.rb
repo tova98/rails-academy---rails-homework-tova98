@@ -34,4 +34,22 @@ RSpec.describe 'Bookings', type: :request do
       expect(json_body['errors']['token']).to include('is invalid')
     end
   end
+
+  it 'returns only bookings with active flights' do
+    flight = create(:flight)
+    create(:booking, flight_id: flight.id)
+    flight.update({ departs_at: DateTime.current - 1 })
+
+    get '/api/bookings?filter=active', headers: auth_headers(user)
+
+    expect(response).to have_http_status(:ok)
+    expect(json_body['bookings'].size).to eq(3)
+  end
+
+  it 'shows total_price' do
+    get '/api/bookings', headers: auth_headers(user)
+
+    expect(response).to have_http_status(:ok)
+    expect(json_body['bookings'].first).to include('total_price')
+  end
 end

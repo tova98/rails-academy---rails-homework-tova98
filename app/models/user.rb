@@ -21,8 +21,6 @@ class User < ApplicationRecord
   has_secure_password
   has_secure_token
 
-  nilify_blanks only: :password
-
   has_many :bookings, dependent: :destroy
   has_many :flights, through: :bookings
 

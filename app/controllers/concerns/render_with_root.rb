@@ -1,7 +1,6 @@
 module RenderWithRoot
-  def render_with_root(root)
+  def render_with_root(entity, root)
     root ||= '1'
-    entity = instance_variable_get("@#{controller_name}")
     serializer_name = "#{controller_name.classify}Serializer"
     case root
     when '1'

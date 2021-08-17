@@ -3,9 +3,11 @@ module Api
     skip_before_action :authenticate, only: [:index, :show]
 
     def index
-      @flights = Flight.all
+      @flights = FlightsQuery.new(Flight.includes(:company).all).sorted
+      @flights = FlightsQuery.new(@flights).with_active_flights
+      @flights = flights_query
 
-      render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
+      render_with_root(@flights, request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show
@@ -50,6 +52,11 @@ module Api
     def flight_params
       params.require(:flight).permit(:name, :no_of_seats, :base_price,
                                      :departs_at, :arrives_at, :company_id)
+    end
+
+    def flights_query
+      FlightsQuery.filtered(@flights, params[:name_cont], params[:departs_at_eq],
+                            params[:no_of_available_seats_gteq])
     end
   end
 end

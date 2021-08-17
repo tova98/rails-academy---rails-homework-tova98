@@ -1,9 +1,9 @@
 module Api
   class BookingsController < ApplicationController
     def index
-      @bookings = policy_scope(Booking)
+      @bookings = BookingsQuery.all(policy_scope(Booking.includes(:user, flight: :company)), params)
 
-      render_with_root(request.headers['X_API_SERIALIZER_ROOT'])
+      render_with_root(@bookings, request.headers['X_API_SERIALIZER_ROOT'])
     end
 
     def show
