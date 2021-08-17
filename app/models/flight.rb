@@ -43,7 +43,7 @@ class Flight < ApplicationRecord
   validates :direct, inclusion: [true, false]
   validates :meal_type, presence: true
 
-  delegate :name, prefix: 'company', to: :company, allow_nil: true
+  delegate :name, to: :company, prefix: true, allow_nil: true
 
   def departs_before_arrives
     return unless departs_at.present? && arrives_at.present?
