@@ -1,0 +1,14 @@
+= simple_form_for [:admin, flight], html: { class: 'bg-light p-4' }, defaults: { wrapper_html: { class: 'col-6' } } do |f|
+  .row.mb-3
+    = f.input :name, input_html: { tabindex: 1 }
+    = f.input :departs_at, input_html: { tabindex: 5 }
+  .row.mb-3
+    = f.input :no_of_seats, input_html: { tabindex: 2 }
+    = f.input :arrives_at, input_html: { tabindex: 6 }
+  .row.mb-3
+    = f.input :base_price, input_html: { tabindex: 3 }
+    = f.input :meal_type, collection: Flight.meal_types.keys.to_a, input_html: { tabindex: 7 }
+  .row.mb-3
+    = f.association :company, input_html: { tabindex: 4 }
+    = f.input :direct, input_html: { tabindex: 8 }
+  = f.submit 'Save', class: 'btn btn-primary mt-3'

@@ -1,0 +1,9 @@
+- flash.each do |type, message|
+  - if type == 'success'
+    .alert.alert-success.alert-dismissible.mb-0
+      = message
+      .btn.btn-close data-bs-dismiss='alert'
+  - else
+    .alert.alert-danger.alert-dismissible.mb-0
+      = message
+      .btn.btn-close data-bs-dismiss='alert'
