@@ -1,5 +1,5 @@
 module Api
-  class UsersController < ApplicationController
+  class UsersController < Api::BaseController
     skip_before_action :authenticate, only: [:create]
 
     def index

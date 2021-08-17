@@ -1,5 +1,5 @@
 module Api
-  class BookingsController < ApplicationController
+  class BookingsController < Api::BaseController
     def index
       @bookings = BookingsQuery.all(policy_scope(Booking.includes(:user, flight: :company)), params)
 

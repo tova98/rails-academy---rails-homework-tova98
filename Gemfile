@@ -29,8 +29,12 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'blueprinter'
 gem 'faraday'
 gem 'jsonapi-serializer'
+gem 'kaminari'
 gem 'pg'
 gem 'pundit'
+gem 'ransack'
+gem 'simple_form'
+gem 'slim-rails'
 
 group :development, :test do
   gem 'bullet'

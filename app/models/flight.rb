@@ -6,6 +6,8 @@
 #  arrives_at  :datetime         not null
 #  base_price  :integer          not null
 #  departs_at  :datetime         not null
+#  direct      :boolean          default(TRUE)
+#  meal_type   :string           default("no_meal")
 #  name        :string           not null
 #  no_of_seats :integer
 #  created_at  :datetime         not null
@@ -29,6 +31,8 @@ class Flight < ApplicationRecord
 
   scope :active, -> { where('departs_at > ?', DateTime.current) }
 
+  enum meal_type: { no_meal: 'no_meal', snack: 'snack', full_meal: 'full_meal' }
+
   validates :name, presence: true, uniqueness: { case_sensitive: false, scope: :company_id }
   validates :no_of_seats, presence: true, numericality: { greater_than: 0 }
   validates :departs_at, presence: true
@@ -36,6 +40,10 @@ class Flight < ApplicationRecord
   validate :departs_before_arrives
   validates :base_price, presence: true, numericality: { greater_than: 0 }
   validate :overlap
+  validates :direct, inclusion: [true, false]
+  validates :meal_type, presence: true
+
+  delegate :name, prefix: 'company', to: :company, allow_nil: true
 
   def departs_before_arrives
     return unless departs_at.present? && arrives_at.present?

@@ -1,5 +1,5 @@
 module Api
-  class CompaniesController < ApplicationController
+  class CompaniesController < Api::BaseController
     skip_before_action :authenticate, only: [:index, :show]
 
     def index

@@ -1,5 +1,5 @@
 module Api
-  class FlightsController < ApplicationController
+  class FlightsController < Api::BaseController
     skip_before_action :authenticate, only: [:index, :show]
 
     def index

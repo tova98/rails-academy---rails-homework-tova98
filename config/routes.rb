@@ -11,4 +11,9 @@ Rails.application.routes.draw do
       resources :companies, only: [:index]
     end
   end
+
+  namespace :admin do
+    resources :flights
+    resources :companies
+  end
 end
